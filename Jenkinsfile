@@ -9,7 +9,9 @@ pipeline {
         stage("hello") {
             steps {
                 echo "${params.Greeting} World!"
-                ls -lah
+                sh '''
+                    ls -lah
+                '''
 
             }
         }
