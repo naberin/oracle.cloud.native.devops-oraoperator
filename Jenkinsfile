@@ -10,7 +10,7 @@ pipeline {
     stages {
         stage("checkout-latest") {
             steps {
-                git 'https://github.com/naberin/oracle.devops.jenkins.sample'
+                git credentialsId: 'naberin-github-credentials', url: 'https://github.com/naberin/oracle.devops.jenkins.sample'
             }
         }
         stage("image-build") {
