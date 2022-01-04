@@ -1,19 +1,20 @@
 pipeline {
     agent any
     
-    parameters {
-        string(name: 'Greeting', defaultValue: 'Hello', description: 'How should I greet?')
-    }
-
     stages {
-        stage("hello") {
-            steps {
-                echo "${params.Greeting} World!"
-                sh '''
-                    ls -lah
-                '''
+        stage("build-and-push") {
+
+            sh "ls -lah"
+
+            sh "cd frontend"
+
+            docker.withRegistry("iad.ocir.io/orasenatdoracledigital01/react-express-native:dev", "ocir-orasenatdoracledigital01") {
+
+                def newImage = docker.build("react-express-native:dev")
+                newImage.push()
 
             }
         }
+
     }
 }
