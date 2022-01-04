@@ -1,21 +1,39 @@
 pipeline {
     agent any
+    environment {
+        region = "iad"
+        registry = "${region}.ocir.io/orasenatdoracledigital01/react-express-native:dev"
+        credential_id = "ocir-orasenatdoracledigital01"
+        image = ""
+    }
     
     stages {
-        stage("build-and-push") {
+        stage("checkout-latest") {
             steps {
-                sh "ls -lah"
-
-                sh "cd frontend"
-
+                git 'https://github.com/naberin/oracle.devops.jenkins.sample'
+            }
+        }
+        stage("image-build") {
+            steps {
                 script {
-                    docker.withRegistry("https://iad.ocir.io/orasenatdoracledigital01/react-express-native:dev", "ocir-orasenatdoracledigital01") {
-
-                        def newImage = docker.build("react-express-native:dev")
-                        newImage.push()
+                    image = docker.build(registry)
+                }
+            }
+        }
+        stage("image-push") {
+            steps {
+                script {
+                    docker.withRegistry("https://${region}.ocir.io", "ocir-orasenatdoracledigital01") {
+                        docker.push()
                     }
                 }
-
+            }
+        }
+        stage("image-cleanup") {
+            steps {
+                script {
+                    sh "docker rmi $registry"
+                }
             }
         }
 
