@@ -2,7 +2,7 @@ pipeline {
     agent any
     
     parameters {
-        string(name: 'Greeting'), defaultValue: 'Hello', description: 'How should I greet?'
+        string(name: 'Greeting', defaultValue: 'Hello', description: 'How should I greet?')
     }
 
     stages {
@@ -10,7 +10,7 @@ pipeline {
             steps {
                 echo "${params.Greeting} World!"
                 ls -lah
-                
+
             }
         }
     }
