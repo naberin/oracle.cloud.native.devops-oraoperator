@@ -1,3 +1,8 @@
+// frontend docker image
+// initialized by build
+// used in push
+def frontend = ""
+
 pipeline {
     agent any
     environment {
@@ -10,6 +15,8 @@ pipeline {
         repository_url = 'https://github.com/naberin/oracle.devops.jenkins.sample'
         repository_branch = 'main'
     }
+
+
     
     stages {
         stage("checkout-latest") {
@@ -21,7 +28,7 @@ pipeline {
             steps {
                 script {
                     dir("frontend") {
-                        def frontend = docker.build(img)
+                        frontend = docker.build(img)
                     }
                 }
             }
