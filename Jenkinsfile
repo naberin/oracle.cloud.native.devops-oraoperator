@@ -10,6 +10,7 @@ pipeline {
     stages {
         stage("checkout-latest") {
             steps {
+                echo 'checking out main from https://github.com/naberin/oracle.devops.jenkins.sample'
                 git branch: 'main', credentialsId: 'naberin-github-credentials', url: 'https://github.com/naberin/oracle.devops.jenkins.sample'
             }
         }
