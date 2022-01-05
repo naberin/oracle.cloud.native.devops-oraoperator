@@ -2,29 +2,35 @@ pipeline {
     agent any
     environment {
         region = "iad"
-        registry = "${region}.ocir.io/orasenatdoracledigital01/react-express-native:dev"
-        credential_id = "ocir-orasenatdoracledigital01"
-        image = ""
+        img = "${region}.ocir.io/orasenatdoracledigital01/react-express-native:dev"
+        registry = "https://${region}.ocir.io"
+
+        ocir_credential_id = "ocir-orasenatdoracledigital01"
+        
+        repository_url = 'https://github.com/naberin/oracle.devops.jenkins.sample'
+        repository_branch = 'main'
     }
     
     stages {
         stage("checkout-latest") {
             steps {
-                git branch: 'main', credentialsId: 'naberin-github-credentials', url: 'https://github.com/naberin/oracle.devops.jenkins.sample'
+                git branch: repository_branch, url: repository_url
             }
         }
         stage("image-build") {
             steps {
                 script {
-                    image = docker.build(registry)
+                    dir("frontend") {
+                        def frontend = docker.build(img)
+                    }
                 }
             }
         }
         stage("image-push") {
             steps {
                 script {
-                    docker.withRegistry("https://${region}.ocir.io", "ocir-orasenatdoracledigital01") {
-                        docker.push()
+                    docker.withRegistry(registry, ocir_credential_id) {
+                        frontend.push()
                     }
                 }
             }
@@ -32,7 +38,7 @@ pipeline {
         stage("image-cleanup") {
             steps {
                 script {
-                    sh "docker rmi $registry"
+                    sh "docker rmi $img"
                 }
             }
         }
