@@ -6,11 +6,10 @@ def frontend = ""
 pipeline {
     agent any
     environment {
-        region = "iad"
-        img = "${region}.ocir.io/orasenatdoracledigital01/react-express-native:dev"
-        registry = "https://${region}.ocir.io"
-
-        ocir_credential_id = "ocir-orasenatdoracledigital01"
+        docker_region = "iad"
+        docker_img = "${docker_region}.ocir.io/orasenatdoracledigital01/react-express-native:dev"
+        docker_registry = "https://${docker_region}.ocir.io"
+        docker_credential_id = "ocir-orasenatdoracledigital01"
         
         repository_url = 'https://github.com/naberin/oracle.devops.jenkins.sample'
         repository_branch = 'main'
@@ -28,7 +27,7 @@ pipeline {
             steps {
                 script {
                     dir("frontend") {
-                        frontend = docker.build(img)
+                        frontend = docker.build(docker_img)
                     }
                 }
             }
@@ -36,7 +35,7 @@ pipeline {
         stage("image-push") {
             steps {
                 script {
-                    docker.withRegistry(registry, ocir_credential_id) {
+                    docker.withRegistry(docker_registry, docker_credential_id) {
                         frontend.push()
                     }
                 }
@@ -45,7 +44,7 @@ pipeline {
         stage("image-cleanup") {
             steps {
                 script {
-                    sh "docker rmi $img"
+                    sh "docker rmi $docker_img"
                 }
             }
         }
