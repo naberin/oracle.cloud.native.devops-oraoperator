@@ -12,4 +12,4 @@ Follow the following steps.
 1. [Provision through Terraform](documentation/1.terraform.md)
 2. [Setup your VM](documentation/2.vm.md)
 3. [Configure Jenkins](documentation/3.jenkins.md)
-4. [Setup Jenkins Pipeline and GitHub webhook](documentation/1.terraform.md)
+4. [Setup Jenkins Pipeline and GitHub webhook](documentation/4.pipeline.md)
