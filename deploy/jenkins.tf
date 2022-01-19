@@ -9,9 +9,6 @@ data "template_file" "jenkins-docker-compose" {
   }
 }
 
-
-
-
 resource "oci_core_instance" "Jenkins" {
   availability_domain = local.availability_domain_name
   compartment_id      = var.compartment_ocid
@@ -72,9 +69,25 @@ resource "oci_core_public_ip" "Jenkins_public_ip" {
 
 resource "null_resource" "Jenkins_provisioner" {
   depends_on = [oci_core_instance.Jenkins, oci_core_public_ip.Jenkins_public_ip]
+
   provisioner "file" {
     content     = data.template_file.jenkins-docker-compose.rendered
     destination = "/home/opc/jenkins.yaml"
+
+    connection {
+      type        = "ssh"
+      host        = oci_core_public_ip.Jenkins_public_ip.ip_address
+      agent       = false
+      timeout     = "5m"
+      user        = "opc"
+      private_key = tls_private_key.public_private_key_pair.private_key_pem
+
+    }
+  }
+
+  provisioner "file" {
+    content     = file("${path.module}/scripts/Dockerfile")
+    destination = "/home/opc/Dockerfile"
 
     connection {
       type        = "ssh"
@@ -100,25 +113,6 @@ resource "null_resource" "Jenkins_provisioner" {
       private_key = tls_private_key.public_private_key_pair.private_key_pem
 
     }
-  }
-
-  provisioner "remote-exec" {
-    connection {
-      type        = "ssh"
-      host        = oci_core_public_ip.Jenkins_public_ip.ip_address
-      agent       = false
-      timeout     = "5m"
-      user        = "opc"
-      private_key = tls_private_key.public_private_key_pair.private_key_pem
-
-    }
-
-    inline = [ 
-      "while [ ! -f /tmp/cloud-init-complete ]; do sleep 1; done",
-      "docker run -v opc_jenkins_home:/var/jenkins_home -v opc_jenkinsRef:/usr/share/jenkins/ref -v /home/opc/casc.yaml:/jenkins/config/casc.yaml -e JENKINS_ADMIN_ID=${var.jenkins_user} -e JENKINS_ADMIN_PASSWORD=${var.jenkins_password}  -e CASC_JENKINS_CONFIG=/jenkins/config/casc.yaml --entrypoint /usr/local/bin/install-plugins.sh jenkins/jenkins:lts git matrix-auth workflow-aggregator blueocean credentials-binding configuration-as-code" 
-      ]
-
-
   }
 
   provisioner "remote-exec" {
