@@ -5,15 +5,19 @@ volumes:
   jenkinsRef:
 
 services:
+
   jenkins:
-    image: jenkins/jenkins:lts
+    container_name: jenkins-docker
     restart: always
+    privileged: true
+    build: .
     ports:
       - 80:8080
     volumes:
       - jenkins_home:/var/jenkins_home
       - jenkinsRef:/usr/share/jenkins/ref
-      - "/home/opc/casc.yaml:/jenkins/config/casc.yaml"
+      - "./casc.yaml:/jenkins/config/casc.yaml"
+      - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - JAVA_OPTS="-Djenkins.install.runSetupWizard=false"
       - JENKINS_ADMIN_ID=${jenkins_user}
