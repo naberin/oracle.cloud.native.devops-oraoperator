@@ -6,7 +6,7 @@ variable "compartment_ocid" {}
 variable "region" {}
 
 variable "repository" { default="oracicd" }
-variable "orderDbName" { default="ORACICDORDER" }
-variable "inventoryDbName" { default="ORACICDINVENTORY" }
+variable "orderDbName" { default="ORACICDORD" }
+variable "inventoryDbName" { default="ORACICDINV" }
 
 variable "autonomous_database_db_workload" { default = "OLTP" }
