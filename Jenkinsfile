@@ -11,7 +11,7 @@ pipeline {
         docker_registry = "https://${docker_region}.ocir.io"
         docker_credential_id = "ocir-orasenatdoracledigital01"
         
-        repository_url = 'https://github.com/naberin/oracle.devops.jenkins.sample'
+        repository_url = 'https://github.com/naberin/oracle.devops.oraoperator.jenkins'
         repository_branch = 'main'
     }
 
