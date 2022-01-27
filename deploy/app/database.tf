@@ -74,17 +74,3 @@ output "autonomous_database_admin_password" {
 }
 
 //================= run SQL scripts to initialize the database =======================================
-
-resource "null_resource" "setup_order_db" {
-  depends_on = ["oci_database_autonomous_database.autonomous_database_atp"]
-  provisioner "local-exec" {
-    
-  }
-}
-
-resource "null_resource" "setup_inventory_db" {
-  depends_on = ["oci_database_autonomous_database.autonomous_database_atp"]
-  provisioner "local-exec" {
-    
-  }
-}
