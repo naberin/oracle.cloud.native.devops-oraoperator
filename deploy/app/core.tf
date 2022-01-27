@@ -1,17 +1,17 @@
 resource "oci_core_vcn" "okell_vcn" {
   cidr_block     = "10.0.0.0/16"
-  compartment_id = var.ociCompartmentOcid
+  compartment_id = var.compartment_ocid
   display_name   = "grabdish"
   dns_label    = "grabdish"
 }
 resource "oci_core_internet_gateway" "ig" {
-   compartment_id = var.ociCompartmentOcid
+   compartment_id = var.compartment_ocid
    display_name   = "ClusterInternetGateway"
    vcn_id         = oci_core_vcn.okell_vcn.id
 }
 /*resource "oci_core_dhcp_options" "grabdish" {
     #Required
-    compartment_id = var.ociCompartmentOcid
+    compartment_id = var.compartment_ocid
     options {
         type = "DomainNameServer"
         server_type = "VcnLocalPlusInternet"
@@ -37,7 +37,7 @@ resource oci_core_private_ip prip {
 }
 data "oci_core_vnic_attachments" "vnic_attachments" {
     #Required
-    compartment_id = var.ociCompartmentOcid
+    compartment_id = var.compartment_ocid
 
     #Optional
     availability_domain = data.oci_identity_availability_domain.ad1.name
@@ -45,7 +45,7 @@ data "oci_core_vnic_attachments" "vnic_attachments" {
     #vnic_id = oci_core_vnic.test_vnic.id
 }
 resource oci_core_public_ip puip {
-  compartment_id = var.ociCompartmentOcid
+  compartment_id = var.compartment_ocid
   display_name = "Floating Public IP for cluster"
   freeform_tags = {
   }
@@ -56,7 +56,7 @@ resource oci_core_public_ip puip {
 */
 resource oci_core_nat_gateway ngw {
   block_traffic  = "false"
-  compartment_id = var.ociCompartmentOcid
+  compartment_id = var.compartment_ocid
   display_name = "ngw"
   freeform_tags = {
   }
@@ -64,7 +64,7 @@ resource oci_core_nat_gateway ngw {
   vcn_id       = oci_core_vcn.okell_vcn.id
 }
 resource oci_core_service_gateway sg {
-  compartment_id = var.ociCompartmentOcid
+  compartment_id = var.compartment_ocid
   display_name = "grabdish"
   freeform_tags = {
   }
@@ -75,7 +75,7 @@ resource oci_core_service_gateway sg {
   vcn_id = oci_core_vcn.okell_vcn.id
 }
 resource oci_core_route_table private {
-  compartment_id = var.ociCompartmentOcid
+  compartment_id = var.compartment_ocid
   display_name = "private"
   freeform_tags = {
   }
@@ -117,7 +117,7 @@ resource "oci_core_subnet" "endpoint_Subnet" {
   #Required
   #availability_domain = data.oci_identity_availability_domain.ad1.name
   cidr_block          = "10.0.0.0/28"
-  compartment_id      = var.ociCompartmentOcid
+  compartment_id      = var.compartment_ocid
   vcn_id              = oci_core_vcn.okell_vcn.id
   # Provider code tries to maintain compatibility with old versions.
   security_list_ids   = [oci_core_security_list.endpoint.id]
@@ -130,7 +130,7 @@ resource "oci_core_subnet" "nodePool_Subnet" {
   #Required
   #availability_domain = data.oci_identity_availability_domain.ad1.name
   cidr_block          = "10.0.10.0/24"
-  compartment_id      = var.ociCompartmentOcid
+  compartment_id      = var.compartment_ocid
   vcn_id              = oci_core_vcn.okell_vcn.id
   # Provider code tries to maintain compatibility with old versions.
   security_list_ids = [oci_core_security_list.nodePool.id]
@@ -143,7 +143,7 @@ resource "oci_core_subnet" "svclb_Subnet" {
   #Required
   #availability_domain = data.oci_identity_availability_domain.ad1.name
   cidr_block          = "10.0.20.0/24"
-  compartment_id      = var.ociCompartmentOcid
+  compartment_id      = var.compartment_ocid
   vcn_id              = oci_core_vcn.okell_vcn.id
   # Provider code tries to maintain compatibility with old versions.
   security_list_ids = [oci_core_default_security_list.svcLB.id]
@@ -154,7 +154,7 @@ resource "oci_core_subnet" "svclb_Subnet" {
   dns_label           = "svclb"
 }
 resource oci_core_security_list nodePool {
-  compartment_id = var.ociCompartmentOcid
+  compartment_id = var.compartment_ocid
   display_name = "nodepool"
   egress_security_rules {
     description      = "Allow pods on one worker node to communicate with pods on other worker nodes"
@@ -343,7 +343,7 @@ resource oci_core_security_list nodePool {
 }
 
 resource oci_core_security_list endpoint {
-  compartment_id = var.ociCompartmentOcid
+  compartment_id = var.compartment_ocid
   display_name = "endpoint"
   egress_security_rules {
     description      = "Allow Kubernetes Control Plane to communicate with OKE"

@@ -20,7 +20,7 @@ resource "random_password" "database_admin_password" {
 resource "oci_database_autonomous_database" "autonomous_database_atp" {
   #Required
   admin_password           = random_password.database_admin_password.result
-  compartment_id           = var.ociCompartmentOcid
+  compartment_id           = var.compartment_ocid
   cpu_core_count           = "1"
   data_storage_size_in_tbs = "1"
   db_name                  = var.orderDbName
@@ -35,7 +35,7 @@ resource "oci_database_autonomous_database" "autonomous_database_atp" {
 resource "oci_database_autonomous_database" "autonomous_database_atp2" {
   #Required
   admin_password           = random_password.database_admin_password.result
-  compartment_id           = var.ociCompartmentOcid
+  compartment_id           = var.compartment_ocid
   cpu_core_count           = "1"
   data_storage_size_in_tbs = "1"
   db_name                  = var.inventoryDbName
@@ -48,14 +48,14 @@ resource "oci_database_autonomous_database" "autonomous_database_atp2" {
 }
 data "oci_database_autonomous_databases" "autonomous_databases_atp" {
   #Required
-  compartment_id = var.ociCompartmentOcid
+  compartment_id = var.compartment_ocid
   #Optional
   display_name =  "ORDERDB"
   db_workload  = var.autonomous_database_db_workload
 }
 data "oci_database_autonomous_databases" "autonomous_databases_atp2" {
   #Required
-  compartment_id = var.ociCompartmentOcid
+  compartment_id = var.compartment_ocid
   #Optional
   display_name = "INVENTORYDB"
   db_workload  = var.autonomous_database_db_workload
@@ -63,7 +63,7 @@ data "oci_database_autonomous_databases" "autonomous_databases_atp2" {
 //======= Name space details ------------------------------------------------------
 data "oci_objectstorage_namespace" "test_namespace" {
   #Optional
-  compartment_id = var.ociCompartmentOcid
+  compartment_id = var.compartment_ocid
 }
 //========= Outputs ===========================
 output "ns_objectstorage_namespace" { 
@@ -71,4 +71,20 @@ output "ns_objectstorage_namespace" {
 }
 output "autonomous_database_admin_password" {
   value =  [ "Welcome12345" ]
+}
+
+//================= run SQL scripts to initialize the database =======================================
+
+resource "null_resource" "setup_order_db" {
+  depends_on = ["oci_database_autonomous_database.autonomous_database_atp"]
+  provisioner "local-exec" {
+    
+  }
+}
+
+resource "null_resource" "setup_inventory_db" {
+  depends_on = ["oci_database_autonomous_database.autonomous_database_atp"]
+  provisioner "local-exec" {
+    
+  }
 }

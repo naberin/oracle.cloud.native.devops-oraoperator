@@ -8,5 +8,8 @@ terraform {
 }
 
 provider "oci" {
-  region = var.ociRegionIdentifier
+  tenancy_ocid = var.tenancy_ocid
+  user_ocid = var.current_user_ocid
+  region = var.region
+
 }

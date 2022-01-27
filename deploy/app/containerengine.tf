@@ -1,6 +1,6 @@
 resource "oci_containerengine_cluster" "okell_cluster" {
   #Required
-  compartment_id     = var.ociCompartmentOcid
+  compartment_id     = var.compartment_ocid
   endpoint_config {
     is_public_ip_enabled = "true"
     nsg_ids = [
@@ -33,7 +33,7 @@ resource "oci_containerengine_cluster" "okell_cluster" {
 resource "oci_containerengine_node_pool" "okell_node_pool" {
   #Required
   cluster_id         = oci_containerengine_cluster.okell_cluster.id
-  compartment_id     = var.ociCompartmentOcid
+  compartment_id     = var.compartment_ocid
   kubernetes_version = "v1.20.8"
   name               = "Pool"
 #  node_shape="VM.Standard2.4"
