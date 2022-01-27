@@ -31,14 +31,14 @@ variables:
     required: true
     title: "OrderDB name"
     description: "Name of Order Database"
-    default: "ORACICDORDER"
+    default: "ORACICDORD"
 
   inventoryDbName:
     type: string
     required: true
     title: "InventoryDB name"
     description: "Name of Inventory Database"
-    default: "ORACICDINVENTORY"
+    default: "ORACICDINV"
 
   repository:
     type: string
