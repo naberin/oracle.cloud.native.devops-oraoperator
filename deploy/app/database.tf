@@ -1,12 +1,11 @@
+
 //================= create ATP Instance =======================================
-variable "autonomous_database_db_workload" { default = "OLTP" }
-variable "autonomous_database_defined_tags_value" { default = "value" }
-variable "autonomous_database_license_model" { default = "BRING_YOUR_OWN_LICENSE" }
-variable "autonomous_database_is_dedicated" { default = false }
+
 resource "random_string" "autonomous_database_wallet_password" {
   length  = 16
   special = true
 }
+
 resource "random_password" "database_admin_password" {
   length  = 12
   upper   = true
@@ -17,6 +16,7 @@ resource "random_password" "database_admin_password" {
   min_upper = "1"
   min_numeric = "1"
 }
+
 resource "oci_database_autonomous_database" "autonomous_database_atp" {
   #Required
   admin_password           = random_password.database_admin_password.result
