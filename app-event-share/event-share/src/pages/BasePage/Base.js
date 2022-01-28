@@ -2,7 +2,7 @@ import './Base.css';
 
 function Base() {
   return (
-    <main className="Base">
+    <main className="base">
     </main>
   );
 }
