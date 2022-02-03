@@ -26,12 +26,13 @@ yum_repos:
     name: Installing Kubernetes CLI kubectl
 
 
-# install docker, git, then kubectl
+# install docker, git, then kubectl, as well as OCI
 packages:
  - docker-engine
  - docker-compose
  - git-all
  - kubectl
+ - python36-oci-cli
 
 runcmd:
   - [ systemctl, daemon-reload ]
