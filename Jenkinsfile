@@ -6,8 +6,8 @@ def frontend = ""
 pipeline {
     agent any
     environment {
-        docker_region = "iad"
-        docker_img = "${docker_region}.ocir.io/orasenatdoracledigital01/react-express-native:dev"
+        docker_region = "phx"
+        docker_img = "${docker_region}.ocir.io/orasenatdoracledigital01/oracicd/react-test:1.0"
         docker_registry = "https://${docker_region}.ocir.io"
         docker_credential_id = "ocir-orasenatdoracledigital01"
         
