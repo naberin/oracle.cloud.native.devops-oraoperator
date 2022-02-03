@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata: 
-name: odjs-test-deployment
+  name: odjs-test-frontend
 spec: 
-selector: 
+  selector: 
     matchLabels:
     app: react-test-frontend
-replicas: 1
-template:
+  replicas: 1
+  template:
     metadata:
-    labels: 
+      labels: 
         app: react-test-frontend
     spec:
-    containers:
-    - name: react-test-frontend
+      containers:
+      - name: react-test-frontend
         image: phx.ocir.io/orasenatdoracledigital01/oracicd/react-test:1.0
         ports:
         - containerPort: 3000
@@ -21,12 +21,12 @@ template:
 apiVersion: v1
 kind: Service
 metadata:
-name: odjs-test-service
+name: react-test-frontend
 spec:
-selector:
+  selector:
     app: react-test-frontend
-ports:
-- protocol: "TCP"
+  ports:
+  - protocol: "TCP"
     port: 80
     targetPort: 3000
 type: LoadBalancer
