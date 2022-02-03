@@ -30,9 +30,6 @@ yum_repos:
 packages:
  - docker-engine
  - docker-compose
- - git-all
- - kubectl
- - python36-oci-cli
 
 runcmd:
   - [ systemctl, daemon-reload ]
