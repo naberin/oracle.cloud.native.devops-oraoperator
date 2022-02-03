@@ -21,7 +21,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-name: react-test-frontend
+  name: react-test-frontend
 spec:
   selector:
     app: react-test-frontend
@@ -29,4 +29,4 @@ spec:
   - protocol: "TCP"
     port: 80
     targetPort: 3000
-type: LoadBalancer
+  type: LoadBalancer
