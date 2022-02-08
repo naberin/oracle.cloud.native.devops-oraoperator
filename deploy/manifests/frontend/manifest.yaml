@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: react-test-frontend
-        image: phx.ocir.io/orasenatdoracledigital01/oracicd/react-test:1.0
+        image: phx.ocir.io/orasenatdoracledigital01/oracicd/frontend-react:1.0
         ports:
         - containerPort: 3000
 ---
