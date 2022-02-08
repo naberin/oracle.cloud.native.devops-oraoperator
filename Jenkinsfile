@@ -63,7 +63,6 @@ pipeline {
                             dir("deploy/manifests/frontend") {
                                 sh 'kubectl config set-context --current --namespace=default'
                                 sh 'kubectl set image deployment/odjs-test-frontend ${docker_img}'
-'
                         }
                     }
                 }
