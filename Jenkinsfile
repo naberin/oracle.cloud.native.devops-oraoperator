@@ -61,6 +61,7 @@ pipeline {
                     ]]) {
                         script {
                             dir("deploy/manifests/frontend") {
+                                sh 'kubectl config set-context --current --namespace=default'
                                 sh 'cat manifest.yaml'
                                 sh 'kubectl get all'
                                 sh 'kubectl config view'
