@@ -7,7 +7,7 @@ pipeline {
     agent any
     environment {
         docker_region = "phx"
-        docker_img = "${docker_region}.ocir.io/orasenatdoracledigital01/oracicd/frontend-react:1.0"
+        docker_img = "${docker_region}.ocir.io/orasenatdoracledigital01/oracicd/frontend-react:${env.BUILD_NUMBER}"
         docker_registry = "https://${docker_region}.ocir.io"
         docker_credential_id = "ocir-orasenatdoracledigital01"
         
@@ -37,6 +37,7 @@ pipeline {
                 script {
                     docker.withRegistry(docker_registry, docker_credential_id) {
                         frontend.push()
+                        frontend.push("latest")
                     }
                 }
             }
