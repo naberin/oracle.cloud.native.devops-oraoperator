@@ -7,11 +7,11 @@ pipeline {
     agent any
     environment {
         docker_region = "phx"
-        docker_img = "${docker_region}.ocir.io/orasenatdoracledigital01/oracicd/react-test:1.0"
+        docker_img = "${docker_region}.ocir.io/orasenatdoracledigital01/oracicd/frontend-react:1.0"
         docker_registry = "https://${docker_region}.ocir.io"
         docker_credential_id = "ocir-orasenatdoracledigital01"
         
-        repository_url = 'https://github.com/naberin/oracle.devops.oraoperator.jenkins'
+        repository_url = 'https://github.com/naberin/oracle.cloud.native.devops-oraoperator.git'
         repository_branch = 'main'
     }
 
@@ -26,7 +26,7 @@ pipeline {
         stage("image-build") {
             steps {
                 script {
-                    dir("frontend") {
+                    dir("app-react-test") {
                         frontend = docker.build(docker_img)
                     }
                 }
@@ -45,6 +45,25 @@ pipeline {
             steps {
                 script {
                     sh "docker rmi $docker_img"
+                }
+            }
+        }
+
+        stage("push to") {
+            steps {
+                withKubeCredentials(kubectlCredentials: [[
+                    caCertificate: '', 
+                    clusterName: 'cluster-cka2gevzbuq', 
+                    contextName: '', 
+                    credentialsId: 'kubeconfig-sa', 
+                    namespace: 'kube-system', 
+                    serverUrl: 'https://129.153.81.238:6443'
+                    ]]) {
+                        script {
+                            dir("deploy/manifests/frontend") {
+                                sh 'kubectl apply -f manifest.yaml'
+                        }
+                    }
                 }
             }
         }
