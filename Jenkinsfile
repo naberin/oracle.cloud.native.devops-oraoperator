@@ -61,6 +61,9 @@ pipeline {
                     ]]) {
                         script {
                             dir("deploy/manifests/frontend") {
+                                sh 'cat manifest.yaml'
+                                sh 'kubectl get all'
+                                sh 'kubectl config view'
                                 sh 'kubectl apply -f manifest.yaml'
                         }
                     }
