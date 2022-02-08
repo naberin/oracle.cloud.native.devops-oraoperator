@@ -53,11 +53,11 @@ pipeline {
             steps {
                 withKubeCredentials(kubectlCredentials: [[
                     caCertificate: '', 
-                    clusterName: 'cluster-cka2gevzbuq', 
+                    clusterName: 'cluster-cgcf6dpb4iq', 
                     contextName: '', 
                     credentialsId: 'kubeconfig-sa', 
                     namespace: 'kube-system', 
-                    serverUrl: 'https://129.153.81.238:6443'
+                    serverUrl: 'https://152.70.148.78:6443'
                     ]]) {
                         script {
                             dir("deploy/manifests/frontend") {
