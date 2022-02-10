@@ -25,20 +25,6 @@ variables:
     visible: false
     title: "Compartment"
     description: "Compartment where your resources will be deployed."
-  
-  orderDbName:
-    type: string
-    required: true
-    title: "OrderDB name"
-    description: "Name of Order Database"
-    default: "ORACICDORD"
-
-  inventoryDbName:
-    type: string
-    required: true
-    title: "InventoryDB name"
-    description: "Name of Inventory Database"
-    default: "ORACICDINV"
 
   repository:
     type: string
@@ -46,9 +32,3 @@ variables:
     title: "OCIR Repository prefix"
     description: "Name of OCIR Repository <repository>/<repo>:<tag>"
     default: "oracicd"
-
-  autonomous_database_db_workload:
-    type: string
-    required: true
-    visible: false
-    default: "OLTP"
