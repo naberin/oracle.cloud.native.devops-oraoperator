@@ -8,7 +8,7 @@ resource "oci_containerengine_cluster" "okell_cluster" {
     subnet_id = oci_core_subnet.endpoint_Subnet.id
   }
   kubernetes_version = "v1.20.8"
-  name               = "grabdish"
+  name               = "reacttest"
   vcn_id             = oci_core_vcn.okell_vcn.id
   #Optional
   options {
@@ -79,32 +79,3 @@ locals {
   all_sources = data.oci_containerengine_node_pool_option.okell_node_pool_option.sources
   oracle_linux_images = [for source in local.all_sources : source.image_id if length(regexall("Oracle-Linux-[0-9]*.[0-9]*-20[0-9]*",source.source_name)) > 0]
 }
-/*
-output "cluster_kubernetes_versions" {
-  value = [data.oci_containerengine_cluster_option.okell_cluster_option.kubernetes_versions]
-}
-output "node_pool_kubernetes_version" {
-  value = [data.oci_containerengine_node_pool_option.okell_node_pool_option.kubernetes_versions]
-}
-data "oci_containerengine_cluster_kube_config" "okell_cluster_kube_config" {
-  #Required
-  cluster_id = oci_containerengine_cluster.okell_cluster.id
-  #Optional
-  token_version = "2.0.0"
-}
-resource "local_file" "okell_cluster_kube_config_file" {
-  content  = data.oci_containerengine_cluster_kube_config.okell_cluster_kube_config.content
-  filename = "${path.module}/okell_cluster_kubeconfig"
-}
-variable "InstanceImageOCID" {
-  type = map(string)
-  default = {
-    // See https://docs.us-phoenix-1.oraclecloud.com/images/
-    // Oracle-provided image "Oracle-Linux-7.5-2018.10.16-0"
-    us-phoenix-1   = "ocid1.image.oc1.phx.aaaaaaaadjnj3da72bztpxinmqpih62c2woscbp6l3wjn36by2cvmdhjub6a"
-    us-ashburn-1   = "ocid1.image.oc1.iad.aaaaaaaawufnve5jxze4xf7orejupw5iq3pms6cuadzjc7klojix6vmk42va"
-    eu-frankfurt-1 = "ocid1.image.oc1.eu-frankfurt-1.aaaaaaaagbrvhganmn7awcr7plaaf5vhabmzhx763z5afiitswjwmzh7upna"
-    uk-london-1    = "ocid1.image.oc1.uk-london-1.aaaaaaaajwtut4l7fo3cvyraate6erdkyf2wdk5vpk6fp6ycng3dv2y3ymvq"
-  }
-}
-*/
