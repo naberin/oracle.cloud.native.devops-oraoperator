@@ -21,7 +21,7 @@ pipeline {
         stage("image-build") {
             steps {
                 script {
-                    dir("cicd-basic/frontend-react") {
+                    dir("cicd-with-sample/frontend-react") {
                         frontend = docker.build(docker_img)
                     }
                 }
@@ -56,7 +56,7 @@ pipeline {
                     serverUrl: 'https://152.70.148.78:6443'
                     ]]) {
                         script {
-                            dir("cicd-basic/deploy/manifests") {
+                            dir("cicd-with-sample/deploy/manifests") {
                                 sh 'kubectl config set-context --current --namespace=default'
                                 sh 'kubectl set image deployment/odjs-test-frontend react-test-frontend=${docker_img}'
                         }
