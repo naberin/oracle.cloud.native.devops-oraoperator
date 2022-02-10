@@ -9,51 +9,7 @@ resource "oci_core_internet_gateway" "ig" {
    display_name   = "ClusterInternetGateway"
    vcn_id         = oci_core_vcn.okell_vcn.id
 }
-/*resource "oci_core_dhcp_options" "grabdish" {
-    #Required
-    compartment_id = var.compartment_ocid
-    options {
-        type = "DomainNameServer"
-        server_type = "VcnLocalPlusInternet"
-    }
 
-    options {
-        type = "SearchDomain"
-        search_domain_names = [ "grabdish.oraclevcn.com" ]
-    }
-
-    vcn_id = oci_core_vcn.okell_vcn.id
-}
-*/
-/*
-resource oci_core_private_ip prip {
-  display_name = "Service VNIC for cluster"
-  freeform_tags = {
-  }
-  hostname_label = "host-10-0-0-2"
-  ip_address     = "10.0.0.2"
-  #vlan_id = <<Optional value not found in discovery>>
-  #vnic_id = oci_core_public_ip.puip.id
-}
-data "oci_core_vnic_attachments" "vnic_attachments" {
-    #Required
-    compartment_id = var.compartment_ocid
-
-    #Optional
-    availability_domain = data.oci_identity_availability_domain.ad1.name
-    #instance_id = oci_core_instance.test_instance.id
-    #vnic_id = oci_core_vnic.test_vnic.id
-}
-resource oci_core_public_ip puip {
-  compartment_id = var.compartment_ocid
-  display_name = "Floating Public IP for cluster"
-  freeform_tags = {
-  }
-  lifetime      = "RESERVED"
-  private_ip_id = oci_core_private_ip.prip.id
-  #public_ip_pool_id = <<Optional value not found in discovery>>
-}
-*/
 resource oci_core_nat_gateway ngw {
   block_traffic  = "false"
   compartment_id = var.compartment_ocid
