@@ -55,11 +55,11 @@ variable vcn_cidr {
 }
 variable vcn_dns {
   description = "VCN subnet DNS record"
-  default = "jenkinsvcn"
+  default = "jnknsvcn"
 }
 variable subnet_dns {
   description = "VCN subnet DNS record"
-  default = "jenkinspubsubnet"
+  default = "jnknsappsub"
 }
 
 locals {
