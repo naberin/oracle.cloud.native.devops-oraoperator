@@ -33,11 +33,13 @@ variable linux_os_version {
 
 variable jenkins_user {
   description = "The username for Jenkins admin user"
+  type = string
   default     = "admin"
 }
 
 variable jenkins_password {
   description = "Password for Jenkins admin user"
+  type = string
   sensitive = true
 }
 variable generate_public_ssh_key {
