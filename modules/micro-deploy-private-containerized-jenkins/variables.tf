@@ -19,6 +19,27 @@ variable vcn_dns {
   description = "VCN subnet DNS record"
   default = "jnknsvcn"
 }
+
+variable load_balancer_shape {
+  description = "A template that determines the total pre-provisioned bandwidth"
+  default = "100Mbps"
+}
+variable load_balancer_shape_details_maximum_bandwidth_in_mbps {
+  description = "Bandwidth in Mbps that determines the maximum bandwidth (ingress plus egress) that the load balancer can achieve"
+  default = 10
+}
+variable load_balancer_shape_details_minimum_bandwidth_in_mbps {
+  description = "Bandwidth in Mbps that determines the total pre-provisioned bandwidth (ingress plus egress)"
+  default = 10
+}
+variable backend_set_name {
+  description = "Name of Load Balancer backend set"
+  default = "jnkns-backend-set"
+}
+variable backend_set_health_checker_port {
+  description = "The backend server port against which to run the health check"
+  default = 80
+}
 variable bastion_name {
   description = "Bastion name"
   default = "jenkins-bastion"
@@ -58,12 +79,22 @@ variable session_display_name {
   type = string
   default = "jenkins-bastion-session"
 }
+variable listener_ca_certificate {
+  default = ""
+}
+variable listener_public_certificate {
+  default = ""
+}
+variable listener_private_key {
+  default = ""
+}
 variable generate_public_ssh_key {
   default = true
 }
 variable public_ssh_key {
   default = ""
 }
+
 
 locals {
   availability_domain_name   = var.availability_domain_name != null ? var.availability_domain_name : data.oci_identity_availability_domains.ADs.availability_domains[0].name
