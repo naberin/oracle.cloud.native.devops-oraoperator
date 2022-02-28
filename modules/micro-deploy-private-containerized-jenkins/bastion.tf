@@ -1,6 +1,5 @@
 
 resource oci_bastion_bastion bastion {
-    #Required
     name = var.bastion_name
     bastion_type = "STANDARD"
     compartment_id = var.compartment_id
@@ -11,7 +10,6 @@ resource oci_bastion_bastion bastion {
 }
 
 resource oci_bastion_session bastion_session {
-    #Required
     bastion_id = oci_bastion_bastion.bastion.id
 
     key_details {
@@ -21,7 +19,7 @@ resource oci_bastion_session bastion_session {
     target_resource_details {
         session_type = "MANAGED_SSH"
         target_resource_id = oci_core_instance.jenkins_vm.id
-        target_resource_operating_system_user_name = opc
+        target_resource_operating_system_user_name = "opc"
         target_resource_port = 22
         target_resource_private_ip_address = oci_core_instance.jenkins_vm.private_ip
     }

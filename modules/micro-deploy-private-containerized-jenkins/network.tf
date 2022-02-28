@@ -11,6 +11,12 @@ resource oci_core_internet_gateway igw {
   display_name = "${var.vcn_name}-igw"
 }
 
+resource oci_core_nat_gateway ngw {
+  compartment_id = var.compartment_id
+  vcn_id = oci_core_virtual_network.jenkins_vcn.id
+  display_name = "${var.vcn_name}-nat"
+}
+
 resource oci_core_route_table pub_lb_rt {
   compartment_id = var.compartment_id
   vcn_id = oci_core_virtual_network.jenkins_vcn.id
@@ -19,6 +25,18 @@ resource oci_core_route_table pub_lb_rt {
   route_rules {
     destination = "0.0.0.0/0"
     network_entity_id = oci_core_internet_gateway.igw.id
+  }
+}
+
+resource "oci_core_route_table" prv_subnet_rt {
+  compartment_id = var.compartment_id
+  vcn_id         = oci_core_virtual_network.jenkins_vcn.id
+  display_name = "${var.vcn_name}-prv-subnet-rt"
+
+  route_rules {
+    destination       = "0.0.0.0/0"
+    destination_type  = "CIDR_BLOCK"
+    network_entity_id = oci_core_nat_gateway.ngw.id
   }
 }
 
@@ -100,8 +118,10 @@ resource "oci_core_subnet" prv_jenkins_controller_subnet {
   display_name = "${var.vcn_name}-pub-subnet"
 
   vcn_id = oci_core_virtual_network.jenkins_vcn.id
+  route_table_id = oci_core_route_table.prv_subnet_rt.id
   security_list_ids = [oci_core_security_list.priv_sl_lb.id]
   dhcp_options_id = oci_core_virtual_network.jenkins_vcn.default_dhcp_options_id
 
+  prohibit_public_ip_on_vnic = true
   dns_label = "jnkscntrlpriv"
 }
