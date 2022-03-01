@@ -8,14 +8,14 @@ data template_file jenkins_docker_compose {
 }
 
 resource null_resource jenkins_provisioner {
-  depends_on = [oci_core_instance.jenkins_vm, oci_bastion_bastion.bastion]
+  depends_on = [oci_core_instance.jenkins_vm, oci_bastion_session.bastion_session]
 
   provisioner file {
     content     = data.template_file.jenkins_docker_compose.rendered
     destination = "/home/opc/jenkins.yaml"
 
     connection {
-      host        = oci_core_public_ip.jenkins_public_ip.ip_address
+      host        = oci_core_instance.jenkins_vm.private_ip
       agent       = false
       timeout     = "5m"
       user        = "opc"
@@ -32,7 +32,7 @@ resource null_resource jenkins_provisioner {
     destination = "/home/opc/Dockerfile"
 
     connection {
-      host        = oci_core_public_ip.jenkins_public_ip.ip_address
+      host        = oci_core_instance.jenkins_vm.private_ip
       agent       = false
       timeout     = "5m"
       user        = "opc"
@@ -50,7 +50,7 @@ resource null_resource jenkins_provisioner {
     destination = "/home/opc/casc.yaml"
 
     connection {
-      host        = oci_core_public_ip.jenkins_public_ip.ip_address
+      host        = oci_core_instance.jenkins_vm.private_ip
       agent       = false
       timeout     = "5m"
       user        = "opc"
@@ -67,7 +67,7 @@ resource null_resource jenkins_provisioner {
 
   provisioner remote-exec {
     connection {
-      host        = oci_core_public_ip.jenkins_public_ip.ip_address
+      host        = oci_core_instance.jenkins_vm.private_ip
       agent       = false
       timeout     = "5m"
       user        = "opc"

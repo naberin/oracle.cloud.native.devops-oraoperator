@@ -36,7 +36,7 @@ resource oci_load_balancer_backend backend {
     backendset_name = oci_load_balancer_backend_set.backend_set.name
     ip_address = oci_core_instance.jenkins_vm.private_ip
     load_balancer_id = oci_load_balancer_load_balancer.load_balancer.id
-    port = 443
+    port = 80
 }
 
 
@@ -54,9 +54,9 @@ resource "oci_load_balancer_certificate" jenkins_lb_cert {
 
 resource "oci_load_balancer_listener" jenkins_lb_listener_with_ssl {
   load_balancer_id         = oci_load_balancer_load_balancer.load_balancer.id
-  name                     = "https"
+  name                     = "http"
   default_backend_set_name = oci_load_balancer_backend_set.backend_set.name
-  port                     = 443
+  port                     = 80
   protocol                 = "HTTP"
 
   ssl_configuration {
