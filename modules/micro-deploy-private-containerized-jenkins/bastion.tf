@@ -9,7 +9,13 @@ resource oci_bastion_bastion bastion {
     freeform_tags = {}
 }
 
+resource "time_sleep" wait_five_mins {
+    depends_on = [oci_core_instance.jenkins_vm]
+    create_duration = "300s"
+}
+
 resource oci_bastion_session bastion_session {
+    depends_on = [time_sleep.wait_five_mins]
     bastion_id = oci_bastion_bastion.bastion.id
 
     key_details {
@@ -25,4 +31,5 @@ resource oci_bastion_session bastion_session {
     }
 
     display_name = var.session_display_name
+    session_ttl_in_seconds = var.session_ttl_in_seconds
 }

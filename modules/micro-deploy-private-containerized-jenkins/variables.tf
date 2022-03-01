@@ -79,6 +79,10 @@ variable session_display_name {
   type = string
   default = "jenkins-bastion-session"
 }
+variable session_ttl_in_seconds {
+  description = "The amount of time the session can remain active"
+  default = 1800
+}
 variable listener_ca_certificate {
   default = ""
 }
