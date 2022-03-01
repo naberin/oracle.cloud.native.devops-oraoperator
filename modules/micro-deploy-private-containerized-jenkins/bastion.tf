@@ -4,7 +4,7 @@ resource oci_bastion_bastion bastion {
     bastion_type = "STANDARD"
     compartment_id = var.compartment_id
     target_subnet_id = oci_core_subnet.prv_jenkins_controller_subnet.id
-
+    client_cidr_block_allow_list = ["0.0.0.0/0"]
     defined_tags = {}
     freeform_tags = {}
 }

@@ -22,15 +22,15 @@ variable vcn_dns {
 
 variable load_balancer_shape {
   description = "A template that determines the total pre-provisioned bandwidth"
-  default = "100Mbps"
+  default = "flexible"
 }
 variable load_balancer_shape_details_maximum_bandwidth_in_mbps {
   description = "Bandwidth in Mbps that determines the maximum bandwidth (ingress plus egress) that the load balancer can achieve"
-  default = 10
+  default = "100"
 }
 variable load_balancer_shape_details_minimum_bandwidth_in_mbps {
   description = "Bandwidth in Mbps that determines the total pre-provisioned bandwidth (ingress plus egress)"
-  default = 10
+  default = "10"
 }
 variable backend_set_name {
   description = "Name of Load Balancer backend set"
@@ -42,7 +42,7 @@ variable backend_set_health_checker_port {
 }
 variable bastion_name {
   description = "Bastion name"
-  default = "jenkins-bastion"
+  default = "jenkinsbastion"
 }
 variable instance_shape {
   description = "Shape of Jenkins VM compute instance to provision and install Jenkins in"

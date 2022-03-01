@@ -34,7 +34,7 @@ resource oci_load_balancer_backend_set backend_set {
 
 resource oci_load_balancer_backend backend {
     backendset_name = oci_load_balancer_backend_set.backend_set.name
-    ip_address = oci_core_public_ip.jenkins_public_ip.ip_address
+    ip_address = oci_core_instance.jenkins_vm.private_ip
     load_balancer_id = oci_load_balancer_load_balancer.load_balancer.id
     port = 443
 }
