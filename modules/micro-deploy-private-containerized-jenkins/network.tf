@@ -124,9 +124,8 @@ resource oci_core_security_list priv_sl_bastion_ssh {
       min = 22
     }
     protocol = "6"
-    source   = "${oci_bastion_bastion.bastion.private_endpoint_ip_address}/32"
+    source   = "0.0.0.0/0"
   }
-
 }
 
 resource "oci_core_subnet" prv_jenkins_controller_subnet {
