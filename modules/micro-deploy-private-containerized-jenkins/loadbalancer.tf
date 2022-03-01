@@ -40,17 +40,17 @@ resource oci_load_balancer_backend backend {
 }
 
 
-resource "oci_load_balancer_certificate" jenkins_lb_cert {
-  load_balancer_id   = oci_load_balancer_load_balancer.load_balancer.id
-  ca_certificate     = var.listener_ca_certificate == "" ? tls_self_signed_cert.certificate.cert_pem : var.listener_ca_certificate
-  certificate_name   = "jenkinscertificate"
-  private_key        = var.listener_private_key == "" ? tls_private_key.jenkins_lb_tls_key_pair.private_key_pem : var.listener_private_key
-  public_certificate = var.listener_public_certificate == "" ? tls_self_signed_cert.certificate.cert_pem : var.listener_public_certificate
-
-  lifecycle {
-    create_before_destroy = true
-  }
-}
+#resource "oci_load_balancer_certificate" jenkins_lb_cert {
+#  load_balancer_id   = oci_load_balancer_load_balancer.load_balancer.id
+#  ca_certificate     = var.listener_ca_certificate == "" ? tls_self_signed_cert.certificate.cert_pem : var.listener_ca_certificate
+#  certificate_name   = "jenkinscertificate"
+#  private_key        = var.listener_private_key == "" ? tls_private_key.jenkins_lb_tls_key_pair.private_key_pem : var.listener_private_key
+#  public_certificate = var.listener_public_certificate == "" ? tls_self_signed_cert.certificate.cert_pem : var.listener_public_certificate
+#
+#  lifecycle {
+#    create_before_destroy = true
+#  }
+#}
 
 resource "oci_load_balancer_listener" jenkins_lb_listener_with_ssl {
   load_balancer_id         = oci_load_balancer_load_balancer.load_balancer.id
@@ -59,8 +59,8 @@ resource "oci_load_balancer_listener" jenkins_lb_listener_with_ssl {
   port                     = 80
   protocol                 = "HTTP"
 
-  ssl_configuration {
-    certificate_name        = oci_load_balancer_certificate.jenkins_lb_cert.certificate_name
-    verify_peer_certificate = false
-  }
+#  ssl_configuration {
+#    certificate_name        = oci_load_balancer_certificate.jenkins_lb_cert.certificate_name
+#    verify_peer_certificate = false
+#  }
 }

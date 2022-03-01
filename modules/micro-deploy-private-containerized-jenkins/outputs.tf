@@ -1,5 +1,5 @@
 output jenkins_ip {
-  value = "${oci_core_public_ip.jenkins_public_ip.ip_address}/login"
+  value = "http://${oci_core_public_ip.jenkins_public_ip.ip_address}/login"
 }
 
 output generated_ssh_private_key {
