@@ -1,69 +1,123 @@
-def frontend = ""
+def frontend    = null
 
 pipeline {
     agent any
+    tools {
+        maven "maven3"
+    }
     environment {
-        docker_region = "phx"
-        docker_img = "${docker_region}.ocir.io/orasenatdoracledigital01/oracicd/frontend-react:${env.BUILD_NUMBER}"
-        docker_registry = "https://${docker_region}.ocir.io"
-        docker_credential_id = "ocir-orasenatdoracledigital01"
-        
-        repository_url = 'https://github.com/naberin/oracle.cloud.native.devops-oraoperator.git'
-        repository_branch = 'main'
+        // Registry
+        ocir_credentials_id = ""
+        region = ""
+        registry = "${region}.ocir.io"
+        http_registry = "https://${registry}"
+        namespace = ""
+
+        // Repository
+        repository = ""
+        branch = ""
+
+        // Directory
+        root = "examples"
+
+        // Locations
+        frontend_directory = "standalone-react-sandbox/app"
+
+        // Images and Containers
+        frontend_name = "react-test-sandbox"
+
+        // Deployments
+        frontend_deployment = "react-sandbox-deployment"
+
+        // Kubernetes
+        kube_cluster_name = ""
+        kube_cluster_credentials_id = ""
+        kube_cluster_namespace = "default"
+        kube_cluster_serviceaccount_namespace = "kube-system"
+        kube_cluster_server_url =   ""
     }
 
     stages {
-        stage("checkout-latest") {
+        stage("checkout") {
             steps {
-                git branch: repository_branch, url: repository_url
+                git branch: branch, url: repository
             }
         }
-        stage("image-build") {
-            steps {
-                script {
-                    dir("cicd-with-sample/frontend-react") {
-                        frontend = docker.build(docker_img)
+        stage("build-push-deploy") {
+            parallel {
+                stage("update-frontend") {
+                    when {
+                        changeset "${root}/${frontend_directory}/**"
+                        beforeAgent true
                     }
-                }
-            }
-        }
-        stage("image-push") {
-            steps {
-                script {
-                    docker.withRegistry(docker_registry, docker_credential_id) {
-                        frontend.push()
-                        frontend.push("latest")
-                    }
-                }
-            }
-        }
-        stage("image-cleanup") {
-            steps {
-                script {
-                    sh "docker rmi $docker_img"
-                }
-            }
-        }
-
-        stage("push to") {
-            steps {
-                withKubeCredentials(kubectlCredentials: [[
-                    caCertificate: '', 
-                    clusterName: 'cluster-cgcf6dpb4iq', 
-                    contextName: '', 
-                    credentialsId: 'kubeconfig-sa', 
-                    namespace: 'kube-system', 
-                    serverUrl: 'https://152.70.148.78:6443'
-                    ]]) {
-                        script {
-                            dir("cicd-with-sample/deploy/manifests") {
-                                sh 'kubectl config set-context --current --namespace=default'
-                                sh 'kubectl set image deployment/odjs-test-frontend react-test-frontend=${docker_img}'
+                    stages {
+                        stage("build-and-push-frontend-helidon") {
+                            steps {
+                                script {
+                                    env.full_image = dkr_build(frontend_name)
+                                    push(env.full_image)
+                                }
+                            }
+                        }
+                        stage("deploy-frontend-helidon") {
+                            steps {
+                                script {
+                                    deploy(frontend_deployment, frontend_name, env.full_image)
+                                }
+                            }
                         }
                     }
                 }
             }
         }
+    }
+}
 
+def getVersion(location=".") {
+    dir(location) {
+        version = readFile "version.txt"
+        return version
+    }
+}
+
+def dkr_build(location, repository) {
+    dir("${root}/${location}") {
+        env.IMAGE_VERSION = getVersion("${root}/${location}")
+        env.DOCKER_REGISTRY = "${registry}/${namespace}"
+        full_image = "${registry}/${namespace}/${repository}:${env.IMAGE_VERSION}"
+        sh "docker build -t ${full_image} ."
+        return full_image
+    }
+}
+
+def mvn_build(repository) {
+    dir("${root}/${repository}") {
+        env.IMAGE_VERSION = getVersion()
+        env.DOCKER_REGISTRY = "${registry}/${namespace}"
+        full_image = "${registry}/${namespace}/${repository}:${env.IMAGE_VERSION}"
+        sh "mvn package"
+        return full_image
+    }
+}
+
+def push(image) {
+    withDockerRegistry(credentialsId: ocir_credentials_id, url: http_registry) {
+        sh "docker push ${image}"
+        sh "docker rmi ${image}"
+    }
+}
+
+def deploy(deployment, container, image){
+
+    withKubeCredentials(kubectlCredentials: [[
+    caCertificate: '',
+    clusterName: kube_cluster_name,
+    contextName: '',
+    credentialsId: kube_cluster_credentials_id,
+    namespace: kube_cluster_serviceaccount_namespace,
+    serverUrl: kube_cluster_server_url
+    ]]) {
+        sh "kubectl config set-context --current --namespace=${kube_cluster_namespace}"
+        sh "kubectl set image deployment/${deployment} ${container}=${image}"
     }
 }

@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata: 
-  name: odjs-test-frontend
+  name: react-sandbox-deployment
 spec: 
   selector: 
     matchLabels:
-      app: react-test-frontend
+      app: react-sandbox
   replicas: 1
   template:
     metadata:
       labels: 
-        app: react-test-frontend
+        app: react-sandbox
     spec:
       containers:
-      - name: react-test-frontend
-        image: phx.ocir.io/orasenatdoracledigital01/oracicd/frontend-react:latest
+      - name: react-sandbox
+        image: ${DOCKER_IMAGE_REGISTRY}:${DOCKER_IMAGE_TAG}
         imagePullPolicy: Always
         ports:
         - containerPort: 3000
@@ -23,10 +23,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: react-test-frontend
+  name: react-sandbox
 spec:
   selector:
-    app: react-test-frontend
+    app: react-sandbox
   ports:
   - protocol: "TCP"
     port: 80
