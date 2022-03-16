@@ -9,7 +9,7 @@ COPY package-lock.json ./
 RUN npm install --silent
 
 # copy files into app
-COPY ../../../app/frontend-react ./
+COPY ./ ./
 
 # expose endpoint
 EXPOSE 3000
