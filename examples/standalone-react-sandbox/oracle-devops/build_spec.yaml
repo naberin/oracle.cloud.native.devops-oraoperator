@@ -1,0 +1,33 @@
+version: 0.1
+component: build
+timeoutInSeconds: 10000
+shell: bash
+
+
+steps:
+  - type: Command
+    name: Build React Application
+    shell: bash
+    timeoutInSeconds: 4000
+    command: |
+      pwd
+      cd examples/standalone-react-sandbox/app
+      npm install
+
+
+#  - type: Command
+#    name: step-name
+#    command: |
+#      command
+#      command
+#      command
+#    onFailure:
+#      - type: Command
+#        command: |
+#          command
+#        timeoutInSeconds: 400
+
+outputArtifacts:
+  - name: frontend-docker
+    type: "DOCKER_IMAGE"
+    location: phx.ocir.io/oracleonpremjava/react-frontend:${reactAppVersion}
