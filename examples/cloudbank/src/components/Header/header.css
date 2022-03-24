@@ -1,0 +1,24 @@
+.app-header {
+    background: #434343;
+    width: 100%;
+    height: 70px;
+    color: #fff;
+
+    border-bottom-color: #FFD600;
+    border-bottom-width: 7px;
+    border-bottom-style: solid;
+}
+
+.app-header h3 {
+    margin: 0;
+}
+.app-header .title .app-title {
+    font-family: Roboto, sans-serif;
+    font-weight: 500;
+    font-size: 18px;
+}
+.app-header .title .app-description {
+    font-family: Roboto Light, sans-serif;
+    font-weight: 100;
+    font-size: 12px;
+}
