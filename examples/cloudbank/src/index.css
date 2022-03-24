@@ -6,7 +6,7 @@
     body   { background: #e9e9e9; color:  #555; }
 }
 
-html, body, .root {
+html, body, #root, .root {
     height: 100%;
     width: 100%;
     margin: 0;
@@ -15,5 +15,22 @@ html, body, .root {
 
 * {
     box-sizing: border-box;
+    font-family: Roboto, sans-serif;
     font-size: 100%;
+}
+
+.flex {
+    display: flex;
+}
+.flex.flex-row {
+    flex-direction: row;
+}
+.flex.flex-col {
+    flex-direction: column;
+}
+.flex-grow-8 {
+    flex-grow: 8;
+}
+.flex.flex-justify-center {
+    justify-content: center;
 }

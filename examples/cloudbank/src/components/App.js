@@ -2,14 +2,18 @@ import './App.css';
 
 import Header from "./Header";
 import React from "react";
+import { Routes, Route } from "react-router-dom";
+import Footer from "./Footer";
+
 
 function App() {
   return (
-      <div className={"root"}>
+      <div className={"root flex flex-col"}>
         <Header/>
-        <main>
+        <Routes>
 
-        </main>
+        </Routes>
+          <Footer />
       </div>
   );
 }

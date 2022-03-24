@@ -1,0 +1,15 @@
+footer {
+    background: #ffffff;
+    font-size: 10px;
+    padding: 12px 0;
+}
+footer .footer-links {
+}
+footer .footer-link {
+    color: #00b2ff;
+    text-decoration: underline;
+    margin: 4px 9px;
+}
+footer .copyright {
+    text-align: center;
+}
