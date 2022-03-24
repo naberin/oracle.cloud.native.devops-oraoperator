@@ -3,10 +3,16 @@ footer {
     font-size: 10px;
     padding: 12px 0;
 }
-footer .footer-links {
+
+.link,
+.link:active,
+.link:visited {
+    color: #0057FF;
 }
+
+
 footer .footer-link {
-    color: #00b2ff;
+
     text-decoration: underline;
     margin: 4px 9px;
 }
