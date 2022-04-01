@@ -1,3 +1,4 @@
+
 .login {
     background: rgb(52, 48, 45);
     font-size: 12px;
@@ -12,6 +13,7 @@
     width: 360px;
     margin: 0 auto;
     border-radius: 10px;
+    filter: drop-shadow(7px 10px 7px rgba(0,0,0,.4));
 }
 
 .login .modal .modal-header {
@@ -29,7 +31,7 @@
     border-radius: 50%;
     padding: 22px 12px;
     font-size: 18px;
-    top: 185px;
+    top: 55px;
     background-color: #ffffff;
 }
 
@@ -64,50 +66,6 @@
 
 .login .login-link {
     padding-left: 4px;
+    text-decoration: underline;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
