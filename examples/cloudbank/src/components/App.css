@@ -11,6 +11,10 @@
 .app-button.submit:hover {
     cursor: pointer;
 }
+.app-button.submit:active {
+    position: relative;
+    top: 2px;
+}
 
 label {
     margin-bottom: 4px;
