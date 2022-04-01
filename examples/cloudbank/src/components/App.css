@@ -8,15 +8,19 @@
     border: none;
 }
 
+.app-button.submit:hover {
+    cursor: pointer;
+}
+
 label {
-    padding-left: 4px;
+    margin-bottom: 4px;
     font-size: 12px;
 }
 .app-field {
     background-color: #e9e9e9;
     border: none;
     padding: 10px;
-    border-radius: 10px;
+    border-radius: 5px;
 }
 
 footer {
