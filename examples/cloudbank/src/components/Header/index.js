@@ -7,11 +7,14 @@ class Component extends React.Component {
             <header className="app-header">
                 <div className={"container flex flex-row"}>
                     <div className="title flex-grow-8 flex flex-col">
-                        <div>
+                        <div className={"flex flex-row"}>
                             <img></img>
-                            <h3 className="app-title">CloudBank</h3>
+                            <div className={"flex flex-col"}>
+                                <h3 className="app-title">CloudBank</h3>
+                                <div className={"app-description"}>A demo application for the OraOperator with Oracle DevOps and observability</div>
+                            </div>
+
                         </div>
-                        <div className={"app-description"}>A demo application for Oracle DB Operator For Kubernetes with DevOps and Observability</div>
                     </div>
                     <div className={"actions"}>
 
