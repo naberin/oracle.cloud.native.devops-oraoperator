@@ -1,7 +1,9 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
-function Transfer(props) {
+function Transfer() {
 
+    const [sources, setSources] = useState([]);
+    const [destinations, setDestinations] = useState([]);
     const [transferDate, setTransferDate] = useState("");
     const [recipient, setRecipient] = useState("");
     const [sender, setSender] = useState("");
@@ -10,6 +12,25 @@ function Transfer(props) {
 
     const [error, setError] = useState(null);
     const [responseData, setResponseData] = useState("");
+
+    // Load source and destination accounts
+    useEffect( async () => {
+
+        const getAvailableAccounts = async () => {
+            let options = {};
+            await fetch("/api/transfer/accounts", options)
+                .then( res => res.json() )
+                .then( data => {
+                    setSources(data.sources);
+                    setDestinations(data.destinations);
+                })
+                .catch( err => {
+                    setError(err);
+                })
+        }
+
+        await getAvailableAccounts();
+    }, []);
 
     let handleSubmit = async () => {
         let data = JSON.stringify({
@@ -47,6 +68,14 @@ function Transfer(props) {
     let handleAmountChange = e => { setAmount(e.target.value )}
     let handleMemoChange = e => { setMemo(e.target.value )}
 
+    let source_options = sources.length ? sources.map( source => {
+
+    }) : <option className={"option"} value={null} disabled={true}>No bank accounts are available as source.</option>;
+
+    let destination_options = destinations.length ? destinations.map( destination => {
+
+    }) : <option className={"option"} value={null} disabled={true}>No bank accounts are available as destination.</option>;
+
     return (
         <div className={"container flex flex-row transfer-block"}>
             <div className={"flex flex-row rows"}>
@@ -60,14 +89,14 @@ function Transfer(props) {
                         <div className={"transfer sender field flex flex-col"}>
                             <label htmlFor={"app-transfer-source"}>Transfer from</label>
                             <select id={"app-transfer-source"} className={"app-field"} required={true} onChange={ handleSenderChange } value={sender}>
-
+                                {source_options}
                             </select>
                         </div>
 
                         <div className={"transfer recipient field flex flex-col"}>
                             <label htmlFor={"app-transfer-source"}>Transfer to</label>
                             <select id={"app-transfer-source"} className={"app-field"} required={true} onChange={ handleRecipientChange } value={recipient}>
-
+                                {destination_options}
                             </select>
                         </div>
 
