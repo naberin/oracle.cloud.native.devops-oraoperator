@@ -1,6 +1,10 @@
 
 .login {
-    background: rgb(52, 48, 45);
+    background-color: rgb(52, 48, 45);
+    background-image: url("./images/login.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     font-size: 12px;
 }
 
@@ -20,6 +24,10 @@
     height: 90px;
     border-radius: 10px 10px 0 0;
     background-color: #eee;
+    background-image: url("./images/login-header.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
 
     border-bottom-color: #FFD600;
     border-bottom-width: 7px;

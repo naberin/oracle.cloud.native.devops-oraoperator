@@ -1,18 +1,20 @@
 .transfer.app-section {
     font-size: 12px;
+    padding-top: 40px;
+    padding-bottom: 40px;
 }
 
 .transfer-header {
-    margin-top: 40px;
-    margin-bottom: 9px;
     height: 50px;
-    background-color: #ffffff;
+    background-image: url("./images/transfer-header.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-color: #fff;
     filter: drop-shadow(2px 7px 13px rgba(0,0,0,.08));
 }
-.transfer-header .nav.current {
-    font-weight: bold;
-}
 .transfer-header .nav {
+    background-color: #fff;
     color: inherit;
     padding: 0 12px;
     border-radius: 0;
@@ -33,16 +35,26 @@
 }
 
 .transfer-header .app-button {
-    border: 1px solid #fff;
+    border: 1px solid transparent;
     transition: background-color .25s;
 }
-.transfer-header .app-button:hover {
-    cursor: pointer;
-    background-color: rgb(255, 183, 0);
+.transfer-header .app-button.current {
+    border: 1px solid #000;
 }
+.transfer-header .app-button:not(.current):hover {
+    border: 1px solid #000;
+    cursor: pointer;
+    background-color: rgb(70, 70, 70);
+    color: #fff;
+}
+.transfer-header .app-button.current:hover {
+    cursor: initial;
+}
+
 
 .transfer-block {
     background-color: #fff;
+    margin-top: 9px;
 }
 .transfer-block .rows {
     width: 100%;
@@ -104,5 +116,7 @@ textarea.output {
 textarea.output:focus {
     outline: none;
 }
-textarea.output:hover {
+
+select > option {
+    padding: 4px;
 }
