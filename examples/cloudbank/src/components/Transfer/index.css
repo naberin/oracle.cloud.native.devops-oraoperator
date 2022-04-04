@@ -16,7 +16,7 @@
 .transfer-header .nav {
     background-color: #fff;
     color: inherit;
-    padding: 0 12px;
+    padding: 0 25px;
     border-radius: 0;
     height: 100%;
 }
@@ -29,23 +29,19 @@
     text-align: center;
 }
 
-.transfer-header .nav.transfer {
-    background: #FFC700;
-    padding: 0 25px;
-}
-
 .transfer-header .app-button {
     border: 1px solid transparent;
     transition: background-color .25s;
 }
 .transfer-header .app-button.current {
+    background: #292929;
+    color: #fff;
     border: 1px solid #000;
 }
 .transfer-header .app-button:not(.current):hover {
     border: 1px solid #000;
     cursor: pointer;
-    background-color: rgb(70, 70, 70);
-    color: #fff;
+    background-color: #FFC700;
 }
 .transfer-header .app-button.current:hover {
     cursor: initial;
