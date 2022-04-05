@@ -17,6 +17,7 @@ function App() {
         <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/transfer/*" element={<Transfer />} />
+            <Route path="/" element={<Transfer />} />
 
         </Routes>
           <Footer />
