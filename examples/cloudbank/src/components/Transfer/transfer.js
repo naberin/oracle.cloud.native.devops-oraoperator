@@ -18,7 +18,7 @@ function Transfer() {
 
         const getAvailableAccounts = async () => {
             let options = {};
-            await fetch("/api/transfer/accounts", options)
+            await fetch(`${process.env.REACT_APP_API_EP}/api/transfer/accounts`, options)
                 .then( res => res.json() )
                 .then( data => {
                     setSources(data.sources);
@@ -49,7 +49,7 @@ function Transfer() {
             body: data
         }
 
-        await fetch("/api/transfer", options)
+        await fetch(`${process.env.REACT_APP_API_EP}/api/transfer`, options)
             .then( res => {
                 return res.json();
             })
