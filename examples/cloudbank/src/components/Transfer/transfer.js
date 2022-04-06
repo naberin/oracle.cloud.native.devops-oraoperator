@@ -68,13 +68,13 @@ function Transfer() {
     let handleAmountChange = e => { setAmount(e.target.value )}
     let handleMemoChange = e => { setMemo(e.target.value )}
 
-    let source_options = sources.length ? sources.map( source => {
+    let source_options = sources && sources.length ?
+        sources.map( source => <option className={"option"} value={source.id}>{source.name}</option>) :
+        <option className={"option"} value={null} disabled={true}>No bank accounts are available as a source.</option>;
 
-    }) : <option className={"option"} value={null} disabled={true}>No bank accounts are available as source.</option>;
-
-    let destination_options = destinations.length ? destinations.map( destination => {
-
-    }) : <option className={"option"} value={null} disabled={true}>No bank accounts are available as destination.</option>;
+    let destination_options = destinations && destinations.length ?
+        destinations.map( destination => <option className={"option"} value={destination.id}>{destination.name}</option>) :
+        <option className={"option"} value={null} disabled={true}>No bank accounts are available as a destination.</option>;
 
     return (
         <div className={"container flex flex-row transfer-block"}>
