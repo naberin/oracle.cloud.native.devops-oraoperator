@@ -1,10 +1,26 @@
 import React from "react";
-import {Link} from "react-router-dom";
+import {Link, useLocation, useNavigate} from "react-router-dom";
+import {useAuth} from "../Auth";
 
 function Modal() {
+    //
+    let auth = useAuth();
+    let location = useLocation();
+    let navigation = useNavigate();
 
-    const submit = () => {
+    let from = location.state ? location.state.from.pathname : "/transfer";
 
+    const submit = (event) => {
+        // prevent reload
+        event.preventDefault();
+
+        let data = new FormData(event.currentTarget);
+        let username = data.get("username");
+        let password = data.get("password");
+
+        auth.signIn({username: username, password: password}, () => {
+            navigation(from, { replace: true })
+        })
     }
 
     return (
@@ -22,12 +38,13 @@ function Modal() {
 
                     <div className={"username field flex flex-col"}>
                         <label>Username</label>
-                        <input type={"text"} id={"app-username"} className={"app-field"}/>
+                        <input type={"text"} id={"app-username"} className={"app-field"} name={"username"}
+                               required={true} />
                     </div>
 
                     <div className={"password field flex flex-col"}>
                         <label>Password</label>
-                        <input type={"password"} id={"app-password"} className={"app-field"}/>
+                        <input type={"password"} id={"app-password"} className={"app-field"} name={"password"}/>
                         <Link to={"/forgot"} className={"link login-link"}>Forgot username/password?</Link>
                     </div>
                 </div>
