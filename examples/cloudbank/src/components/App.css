@@ -1,3 +1,4 @@
+
 .app-button {
     padding: 9px;
     border-radius: 10px;
@@ -8,12 +9,22 @@
     border: none;
 }
 
+button.app-button:hover,
 .app-button.submit:hover {
     cursor: pointer;
 }
 .app-button.submit:active {
     position: relative;
     top: 2px;
+}
+
+button.app-button {
+    border: none;
+    font-size: 12px;
+}
+button.app-button.dark {
+    background-color: #292929;
+    color: #fff;
 }
 
 label {
