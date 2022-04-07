@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: cloudbank-fe
-          image: cloudbank-fe:1.0.0
+          image: "${cloudbank-fe-location}:${cloudbank-fe-version}"
           ports:
             - containerPort: 3000
 ---
