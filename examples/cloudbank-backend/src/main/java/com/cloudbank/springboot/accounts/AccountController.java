@@ -3,7 +3,6 @@ package com.cloudbank.springboot.accounts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -17,14 +16,14 @@ public class AccountController {
     private AccountService accountService;
 
     @GetMapping
-    public List<Object> handleGetAccounts(@RequestParam(defaultValue = "false") String list) {
-        boolean withoutBalance = list.equals("true");
-        return accountService.getListOfAccounts(withoutBalance);
+    public List<Object> handleGetAccounts() {
+        return accountService.getUserAccounts();
+
     }
 
     @GetMapping("/transfer")
     public Map<String, Object> handleTransfer() {
-        return accountService.getAccountsForTransfer();
+        return accountService.getUserAndExternalAccounts();
 
     }
 
