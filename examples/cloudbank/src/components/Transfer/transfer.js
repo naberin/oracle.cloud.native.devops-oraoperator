@@ -18,7 +18,7 @@ function Transfer() {
 
         const getAvailableAccounts = async () => {
             let options = {};
-            await fetch(`${process.env.REACT_APP_API_EP}/api/transfer/accounts`, options)
+            await fetch(`${process.env.REACT_APP_API_EP}/api/account/transfer`, options)
                 .then( res => res.json() )
                 .then( data => {
                     setSources(data.sources);
@@ -68,13 +68,26 @@ function Transfer() {
     let handleAmountChange = e => { setAmount(e.target.value )}
     let handleMemoChange = e => { setMemo(e.target.value )}
 
-    let source_options = sources && sources.length ?
-        sources.map( source => <option className={"option"} value={source.id}>{source.name}</option>) :
-        <option className={"option"} value={null} disabled={true}>No bank accounts are available as a source.</option>;
+    let source_options = () => {
 
-    let destination_options = destinations && destinations.length ?
-        destinations.map( destination => <option className={"option"} value={destination.id}>{destination.name}</option>) :
-        <option className={"option"} value={null} disabled={true}>No bank accounts are available as a destination.</option>;
+        if (sources && sources.length) {
+            let options = [<option className={"option"} value={null} key={-1}>Select a bank account as a source</option>];
+            let items = sources.map( (source, index) => <option className={"option"} value={source.accountId} key={index}>{source.accountName}</option>)
+            return [...options, ...items];
+        }
+        return <option className={"option"} value={null} disabled={true}>No bank accounts are available as a source</option>;
+
+    }
+
+    let destination_options = () => {
+
+        if (destinations && destinations.length) {
+            let options = [<option className={"option"} value={null} key={-1}>Select a bank account as a destination</option>];
+            let items = destinations.map( (destinations, index) => <option className={"option"} value={destinations.recordId} key={index}>{destinations.accountName}</option>)
+            return [...options, ...items];
+        }
+        return <option className={"option"} value={null} disabled={true}>No bank accounts are available as a destination</option>;
+    }
 
     return (
         <div className={"container flex flex-row transfer-block"}>
@@ -89,14 +102,14 @@ function Transfer() {
                         <div className={"transfer sender field flex flex-col"}>
                             <label htmlFor={"app-transfer-source"}>Transfer from</label>
                             <select id={"app-transfer-source"} className={"app-field"} required={true} onChange={ handleSenderChange } value={sender}>
-                                {source_options}
+                                {source_options()}
                             </select>
                         </div>
 
                         <div className={"transfer recipient field flex flex-col"}>
                             <label htmlFor={"app-transfer-source"}>Transfer to</label>
                             <select id={"app-transfer-source"} className={"app-field"} required={true} onChange={ handleRecipientChange } value={recipient}>
-                                {destination_options}
+                                {destination_options()}
                             </select>
                         </div>
 
