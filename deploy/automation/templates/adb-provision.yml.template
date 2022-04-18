@@ -1,0 +1,20 @@
+#
+# Copyright (c) 2021, Oracle and/or its affiliates. 
+# Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.
+#
+apiVersion: database.oracle.com/v1alpha1
+kind: AutonomousDatabase
+metadata:
+  name: {{ADBNAME}}
+spec:
+  details:
+    # Update compartmentOCID with your compartment OCID.
+    compartmentOCID: {{OCICOMPARTMENTOCID}}
+    # The dbName must begin with an alphabetic character and can contain a maximum of 14 alphanumeric characters. 
+    # Special characters are not permitted. The database name must be unique in the tenancy.
+    dbName: {{ADBRESOURCENAME}}
+    displayName: {{ADBRESOURCENAME}}
+    cpuCoreCount: 1
+    adminPassword:
+      ociSecretOCID: {{OCIVAULTOCID}}
+    dataStorageSizeInTBs: 1
