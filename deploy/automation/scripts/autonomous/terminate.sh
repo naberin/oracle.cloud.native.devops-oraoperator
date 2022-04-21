@@ -14,6 +14,6 @@ ADBOCID=`kubectl get AutonomousDatabase/$ADBNAME -o jsonpath='{.spec.details.aut
 # by retrieving ADBOCID using the Operator
 # #############################################
 if [ ! -z "$ADBOCID" ] then
-    tmplt =`cat "../templates/adb-terminate.yml.template" | sed -i -e "s/{{ADBOCID}}/$ADBOCID/g" -e "s/{{ADBNAME}}/$ADBNAME/g"`
+    tmplt =`cat "../templates/adb-terminate.yml" | sed -i -e "s/{{ADBOCID}}/$ADBOCID/g" -e "s/{{ADBNAME}}/$ADBNAME/g"`
     echo "$tmplt" # | kubectl apply -f
 fi

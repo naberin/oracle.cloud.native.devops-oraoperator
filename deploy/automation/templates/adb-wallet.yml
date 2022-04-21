@@ -2,6 +2,7 @@
 # Copyright (c) 2021, Oracle and/or its affiliates. 
 # Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.
 #
+---
 apiVersion: database.oracle.com/v1alpha1
 kind: AutonomousDatabase
 metadata:
@@ -9,7 +10,10 @@ metadata:
 spec:
   details:
     autonomousDatabaseOCID: {{ADBOCID}}
-    lifecycleState: TERMINATED
+    wallet:
+      name: {{DBWALLETINSTANCENAME}}
+      password:
+        k8sSecretName: {{DBWALLETSECRETNAME}}
   ociConfig:
     configMapName: {{OCICREDCONFMAP}}
     secretName: {{OCIPRVKEYSECRETNAME}}

@@ -5,11 +5,10 @@
 apiVersion: database.oracle.com/v1alpha1
 kind: AutonomousDatabase
 metadata:
-  name: {{DBNAME}}
+  name: {{ADBNAME}}
 spec:
   details:
     autonomousDatabaseOCID: {{ADBOCID}}
-    lifecycleState: TERMINATED
   ociConfig:
     configMapName: {{OCICREDCONFMAP}}
     secretName: {{OCIPRVKEYSECRETNAME}}
