@@ -15,7 +15,7 @@ OCI_PRIVKEY_SEC='oci-privatekey'
 # by retrieving ADBOCID using the Operator
 # #############################################
 if [ ! -z "$DB_OCID" ] then
-    tmplt =`cat "../templates/adb-terminate.yml" | sed -i -e "s/{{DB_OCID}}/$DB_OCID/g" -e "s/{{DB_NAME}}/$DB_NAME/g"`
+    tmplt =`cat "../templates/adb-terminate.yml" | sed -i -e "s/{{DB_OCID}}/${DB_OCID}/g" -e "s/{{DB_NAME}}/${DB_NAME}/g" -e "s/{{OCI_CONFIG}}/${OCI_CONFIG}/g" -e "s/{{OCI_PRIVKEY_SEC}}/${OCI_PRIVKEY_SEC}/g"`
     echo "$tmplt" # | kubectl apply -f
 elif [ -z "$DB_OCID" ] then
     echo "LabError: Database OCID not found for AutonomousDatabase/${DB_NAME}"
