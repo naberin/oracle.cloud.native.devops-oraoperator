@@ -17,6 +17,11 @@ OCI_PRIVKEY_SEC='oci-privatekey'
 # ##########################################
 if [ ! -z "$DB_NAME" ];
 then
-    tmplt=`cat "../templates/adb-provision.yml" | sed -e "s/{{DB_NAME}}/$DB_NAME/g" -e "s/{{OCI_COMPARTMENT_OCID}}/$OCI_COMPARTMENT_OCID/g" -e "s/{{DB_RESOURCE_NAME}}/$DB_RESOURCE_NAME/g" -e "s/{{DB_DISPLAY_NAME}}/$DB_DISPLAY_NAME/g" -e "s/{{DB_PSWD_SEC}}/$DB_PSWD_SEC/g -e "s/{{OCI_CONFIG}}/$OCI_CONFIG/g" -e "s/{{OCI_PRIVKEY_SEC}}/$OCI_PRIVKEY_SEC/g" "`
+    tmplt=`cat "../templates/adb-provision.yml" | sed -e "s/{{DB_NAME}}/${DB_NAME}/g" -e "s/{{OCI_COMPARTMENT_OCID}}/${OCI_COMPARTMENT_OCID}/g" -e "s/{{DB_RESOURCE_NAME}}/${DB_RESOURCE_NAME}/g" -e "s/{{DB_DISPLAY_NAME}}/${DB_DISPLAY_NAME}/g" -e "s/{{DB_PSWD_SEC}}/${DB_PSWD_SEC}/g" -e "s/{{OCI_CONFIG}}/${OCI_CONFIG}/g" -e "s/{{OCI_PRIVKEY_SEC}}/${OCI_PRIVKEY_SEC}/g"`
     echo "$tmplt" | kubectl apply -f -;
+
+elif [ -z "$DB_NAME"];
+then
+    echo 'Error: Provide a database name.'
+
 fi
