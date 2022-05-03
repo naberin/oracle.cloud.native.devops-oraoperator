@@ -23,7 +23,7 @@ spec:
         - name: oracle.ucp.jdbc.PoolDataSource.orderpdb.user
           value: "ORDERUSER"
         - name: oracle.ucp.jdbc.PoolDataSource.orderpdb.URL
-          value: "jdbc:oracle:thin:@adbcloudbank_high$?TNS_ADMIN=/msdataworkshop/creds"
+          value: "jdbc:oracle:thin:@adbcloudbank_high?TNS_ADMIN=/msdataworkshop/creds"
         - name: queueowner
           value: "AQ"
         - name: orderqueuename
