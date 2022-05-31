@@ -8,10 +8,21 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
+
+/**
+ * Sets SecurityFilterChain to setup CSRF token repository (Line 29)
+ * and use the default Form Login for authentication. (Lin 31)
+ */
 @EnableWebSecurity
 @Configuration
 public class WebSecurityConfig {
 
+    /**
+     * 
+     * @param httpSecurity
+     * @return
+     * @throws Exception
+     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
 
