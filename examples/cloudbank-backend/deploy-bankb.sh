@@ -4,6 +4,8 @@
 
 SCRIPT_DIR=$(dirname $0)
 
+DB_WALLET_SECRET='instance-wallet'
+
 if [ -z "$DOCKER_REGISTRY" ]; then
     echo "DOCKER_REGISTRY not set. Will get it with state_get"
   export DOCKER_REGISTRY=$(state_get DOCKER_REGISTRY)
@@ -35,7 +37,7 @@ sed -e  "s|%DOCKER_REGISTRY%|${DOCKER_REGISTRY}|g" bank-deployment-$CURRENTTIME.
 mv -- /tmp/bank-deployment-$CURRENTTIME.yaml bank-deployment-$CURRENTTIME.yaml
 sed -e  "s|%BANK_NAME%|bankb|g" bank-deployment-${CURRENTTIME}.yaml > /tmp/bank-deployment-$CURRENTTIME.yaml
 mv -- /tmp/bank-deployment-$CURRENTTIME.yaml bank-deployment-$CURRENTTIME.yaml
-sed -e  "s|%db-wallet-secret%|order-db-tns-admin-secret|g" bank-deployment-${CURRENTTIME}.yaml > /tmp/bank-deployment-$CURRENTTIME.yaml
+sed -e  "s|%db-wallet-secret%|${DB_WALLET_SECRET}|g" bank-deployment-${CURRENTTIME}.yaml > /tmp/bank-deployment-$CURRENTTIME.yaml
 mv -- /tmp/bank-deployment-$CURRENTTIME.yaml bank-deployment-$CURRENTTIME.yaml
 sed -e  "s|%PDB_NAME%|${ORDER_DB_NAME}|g" bank-deployment-${CURRENTTIME}.yaml > /tmp/bank-deployment-$CURRENTTIME.yaml
 mv -- /tmp/bank-deployment-$CURRENTTIME.yaml bank-deployment-$CURRENTTIME.yaml
