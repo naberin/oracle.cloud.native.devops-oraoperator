@@ -3,12 +3,11 @@
 ## Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl/
 
 SCRIPT_DIR=$(dirname $0)
-
-DB_WALLET_SECRET='instance-wallet'
+DB_WALLET_SECRET=$(jq .SECRETS.DB_WALLET_SECRET.name ../setup.json)
 
 if [ -z "$DOCKER_REGISTRY" ]; then
-    echo "DOCKER_REGISTRY not set. Will get it with state_get"
-  export DOCKER_REGISTRY=$(state_get DOCKER_REGISTRY)
+    echo "DOCKER_REGISTRY not set. Will get it from setup.json"
+    export $DOCKER_REGISTRY=$(jq .DOCKER_REGISTRY.value ../setup.json)
 fi
 
 if [ -z "$DOCKER_REGISTRY" ]; then
@@ -17,8 +16,8 @@ if [ -z "$DOCKER_REGISTRY" ]; then
 fi
 
 if [ -z "$ORDER_DB_NAME" ]; then
-    echo "ORDER_DB_NAME not set. Will get it with state_get"
-  export ORDER_DB_NAME=$(state_get ORDER_DB_NAME)
+    echo "ORDER_DB_NAME not set. Will get it from setup.json"
+  export ORDER_DB_NAME=$(jq .CLOUDBANK.DATABASE.name ../setup.json)
 fi
 
 if [ -z "$ORDER_DB_NAME" ]; then
@@ -56,6 +55,6 @@ mv -- /tmp/bank-deployment-$CURRENTTIME.yaml bank-deployment-$CURRENTTIME.yaml
 sed -e  "s|%remotebankqueuename%|BANKBQUEUE|g" bank-deployment-${CURRENTTIME}.yaml > /tmp/bank-deployment-$CURRENTTIME.yaml
 mv -- /tmp/bank-deployment-$CURRENTTIME.yaml bank-deployment-$CURRENTTIME.yaml
 
-kubectl apply -f $SCRIPT_DIR/bank-deployment-$CURRENTTIME.yaml -n msdataworkshop
+kubectl apply -f $SCRIPT_DIR/bank-deployment-$CURRENTTIME.yaml
 
-kubectl apply -f $SCRIPT_DIR/banka-service.yaml -n msdataworkshop
+kubectl apply -f $SCRIPT_DIR/banka-service.yaml
