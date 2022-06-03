@@ -35,8 +35,8 @@ spec:
         - name: bankdbpw
           valueFrom:
             secretKeyRef:
-              name: dbuser
-              key: dbpassword
+              name: admin-password
+              key: admin-password
               optional: true
         volumeMounts:
         - name: creds
