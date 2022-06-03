@@ -1,0 +1,33 @@
+{
+    "CLOUDBANK": {
+        "NAMESPACE": "cloudbank",
+        "SERVICES": {
+            "BANKA": "banka",
+            "BANKB": "bankb",
+            "PORT": 8080
+        },
+        "DATABASE": {
+            "name": "cloudbankdb"
+        }
+    },
+    "DOCKER_REGISTRY": {
+        "example": "phx.ocir.io/tenancy_namespace",
+        "value": ""
+    },
+    "FRONTEND": {
+        "IMAGE": {
+            "value": "bank-react",
+            "version": 0.1
+        },
+        "USER": "cloudbank"
+    },
+    "SECRETS": {
+        "DB_WALLET_SECRET": {
+            "name": "instance-wallet"
+        },
+        "FRONTEND_CREDENTIALS": {
+            "name": "cloudbank_password",
+            "key": "password"
+        }
+    }
+}
