@@ -20,7 +20,11 @@ spec:
           imagePullPolicy: Always
           env:
             - name: CLOUDBANK_SECURITY_PASSWORD
-              value: "%CLOUDBANK_SECURITY_PASSWORD%"
+              valueFrom:
+                secretKeyRef:
+                  name: "%CLOUDBANK_SECURITY_PWD_SECRET_NAME%"
+                  key: "%CLOUDBANK_SECURITY_PWD_SECRET_KEY%"
+                  optional: true
             - name: CLOUDBANK_SECURITY_USERNAME
               value: "%CLOUDBANK_SECURITY_USERNAME%"
             - name: CLOUDBANK_APIS_BANKA
@@ -41,7 +45,6 @@ metadata:
   #  service.beta.kubernetes.io/oci-load-balancer-ssl-ports: "443"
   #  service.beta.kubernetes.io/oci-load-balancer-tls-secret: ssl-certificate-secret
 spec:
-  #  type: LoadBalancer
   type: LoadBalancer
   ports:
     - port: 80
@@ -49,8 +52,5 @@ spec:
       targetPort: 8080
   selector:
     app: frontend
-
-
----
 
 
