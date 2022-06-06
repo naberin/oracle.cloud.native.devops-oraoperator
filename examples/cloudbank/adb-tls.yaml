@@ -1,0 +1,28 @@
+apiVersion: database.oracle.com/v1alpha1
+kind: AutonomousDatabase
+metadata:
+  name: cloudbankdb
+spec:
+  details:
+    autonomousDatabaseOCID: %ADB_COMPARTMENT%
+    networkAccess:
+      accessType: PUBLIC
+			accessControlList:
+			- 0.0.0.0/0
+  ociConfig:
+    configMapName: oci-cred
+    secretName: oci-privatekey
+
+---
+
+kind: AutonomousDatabase
+metadata:
+  name: cloudbankdb
+spec:
+  details:
+    autonomousDatabaseOCID: %ADB_COMPARTMENT%
+    networkAccess:
+      isMTLSConnectionRequired: false
+  ociConfig:
+    configMapName: oci-cred
+    secretName: oci-privatekey

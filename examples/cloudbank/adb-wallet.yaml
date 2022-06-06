@@ -1,0 +1,15 @@
+apiVersion: database.oracle.com/v1alpha1
+kind: AutonomousDatabase
+metadata:
+  name: cloudbankdb
+spec:
+  details:
+    autonomousDatabaseOCID: %ADB_COMPARTMENT%
+    wallet:
+      name: instance-wallet
+      password:
+        k8sSecret:
+          name: instance-wallet-password
+  ociConfig:
+    configMapName: oci-cred
+    secretName: oci-privatekey
