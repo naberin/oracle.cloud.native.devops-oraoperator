@@ -3,7 +3,7 @@
 ## Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl/
 
 
-export IMAGE_NAME=bank-springboot
+export IMAGE_NAME=transfer-springboot
 export IMAGE_VERSION=0.1
 
 if [ -z "$DOCKER_REGISTRY" ]; then

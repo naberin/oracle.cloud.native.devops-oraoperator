@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: bank
-        image: %DOCKER_REGISTRY%/bank-springboot:0.1
+        image: %DOCKER_REGISTRY%/transfer-springboot:0.1
         imagePullPolicy: Always
         env:
         - name: localbankqueueschema

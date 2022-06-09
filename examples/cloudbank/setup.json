@@ -16,7 +16,7 @@
     },
     "FRONTEND": {
         "IMAGE": {
-            "value": "bank-react",
+            "value": "frontend-react-springboot",
             "version": 0.1
         },
         "USER": "cloudbank"
