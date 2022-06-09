@@ -22,15 +22,15 @@ spec:
             - name: CLOUDBANK_SECURITY_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: "%CLOUDBANK_SECURITY_PWD_SECRET_NAME%"
-                  key: "%CLOUDBANK_SECURITY_PWD_SECRET_KEY%"
+                  name: %CLOUDBANK_SECURITY_PWD_SECRET_NAME%
+                  key: %CLOUDBANK_SECURITY_PWD_SECRET_KEY%
                   optional: true
             - name: CLOUDBANK_SECURITY_USERNAME
-              value: "%CLOUDBANK_SECURITY_USERNAME%"
+              value: %CLOUDBANK_SECURITY_USERNAME%
             - name: CLOUDBANK_APIS_BANKA
-              value: "%CLOUDBANK_APIS_BANKA%"
+              value: %CLOUDBANK_APIS_BANKA%
             - name: CLOUDBANK_APIS_BANKB
-              value: "%CLOUDBANK_APIS_BANKB%"
+              value: %CLOUDBANK_APIS_BANKB%
           ports:
             - containerPort: 8080
 ---
