@@ -4,7 +4,7 @@ metadata:
   name: cloudbankdb
 spec:
   details:
-    autonomousDatabaseOCID: %ADB_COMPARTMENT%
+    autonomousDatabaseOCID: %ADB_OCID%
     wallet:
       name: instance-wallet
       password:
