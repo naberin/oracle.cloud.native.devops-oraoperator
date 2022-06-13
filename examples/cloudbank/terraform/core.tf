@@ -46,7 +46,7 @@ resource oci_core_subnet regional_apiendpoint_subnet {
   prohibit_public_ip_on_vnic = "false"
   route_table_id             = oci_core_vcn.cloudbank_vcn.default_route_table_id
   security_list_ids = [
-    oci_core_security_list.export_oke-k8sApiEndpoint-quick-cloudbank-667eeceb7.id,
+    oci_core_security_list.cloudbank-oke-k8sApiEndpoint.id,
   ]
   vcn_id = oci_core_vcn.cloudbank_vcn.id
 }
@@ -128,7 +128,7 @@ resource oci_core_route_table oke-private-rt {
   vcn_id = oci_core_vcn.cloudbank_vcn.id
 }
 
-resource oci_core_default_route_table export_oke-public-routetable-cloudbank-667eeceb7 {
+resource oci_core_default_route_table export_oke-public-routetable {
   compartment_id = var.compartment_ocid
   defined_tags = {
   }
@@ -144,7 +144,7 @@ resource oci_core_default_route_table export_oke-public-routetable-cloudbank-667
   }
 }
 
-resource oci_core_security_list export_oke-k8sApiEndpoint-quick-cloudbank-667eeceb7 {
+resource oci_core_security_list cloudbank-oke-k8sApiEndpoint {
   compartment_id = var.compartment_ocid
   defined_tags = {
   }
@@ -342,7 +342,7 @@ resource oci_core_security_list node_security_list {
   vcn_id = oci_core_vcn.cloudbank_vcn.id
 }
 
-resource oci_core_default_security_list export_oke-svclbseclist-quick-cloudbank-667eeceb7 {
+resource oci_core_default_security_list export_oke-svclbseclist {
   compartment_id = var.compartment_ocid
   display_name = "cloudbank-oke-svclb"
 
