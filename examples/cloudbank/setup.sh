@@ -26,6 +26,9 @@ echo 'DONE'
 
 # Copy Kubernetes scripts
 echo -n 'Copying Lab related scripts...'
+cp -r $CB_ROOT_DIR/scripts/* $CB_STATE_DIR
+echo 'DONE'
+
 echo 'DONE'
 
 
