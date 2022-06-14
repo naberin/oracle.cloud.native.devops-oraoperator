@@ -6,7 +6,7 @@ STATE_LOCATION=$CB_STATE_DIR/state.json
 
 # requires Autonomous Database OCID
 echo "Retreiving Autonomous Database OCID"
-if [ "$(jq -e .state.adb_ocid $STATE_LOCATION )" ]; then
+if [ "$(jq -e .lab.ocid.adb $STATE_LOCATION )" ]; then
 
   OCID=$(kubectl get AutonomousDatabase/cloudbankdb -o jsonpath='{.spec.details.autonomousDatabaseOCID}')
 
@@ -16,14 +16,14 @@ if [ "$(jq -e .state.adb_ocid $STATE_LOCATION )" ]; then
     exit 1;
   fi
 
-  echo $(jq --arg VAL $OCID '.state.adb_ocid |= $VAL' $STATE_LOCATION) > $STATE_LOCATION
+  echo $(jq --arg VAL $OCID '.lab.ocid.adb |= $VAL' $STATE_LOCATION) > $STATE_LOCATION
   echo "adb_ocid set."
 fi
 echo ""
 
 
-# Set compartment OCID variable
-ADB_OCID=$(jq -r .state.adb_ocid $STATE_LOCATION)
+# Set ADB OCID variable
+ADB_OCID=$(state_get .lab.ocid.adb)
 
 
 # generate YAML
