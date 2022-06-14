@@ -22,9 +22,13 @@ echo 'DONE'
 
 
 # Copy JSON as new state
-echo -n 'Generating State file...'
-cp $CB_ROOT_DIR/state.json $CB_STATE_DIR/state.json
-chmod 700 $CB_STATE_DIR/state.json
+echo - 'Checking State file...'
+if [ ! -f $CB_STATE_DIR/state.json ]; then
+  echo 'Not Found'
+  echo -n 'Generating State file...'
+  cp $CB_ROOT_DIR/state.json $CB_STATE_DIR/state.json
+  chmod 700 $CB_STATE_DIR/state.json
+fi
 echo 'DONE'
 
 
