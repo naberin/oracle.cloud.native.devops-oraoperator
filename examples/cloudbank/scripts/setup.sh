@@ -12,13 +12,6 @@ fi
 # Make directories for lab-related files
 echo -n 'Beginning Lab setup...'
 
-
-if [ -d $CB_STATE_DIR ]; then
-  echo ''
-  echo 'Pre-existing state directory found. Renaming old-lab directory...'
-  mv $CB_STATE_DIR $CB_STATE_DIR-$CURRENT_TIME
-fi
-
 mkdir -p $CB_STATE_DIR;
 mkdir -p $CB_STATE_DIR/generated;
 mkdir -p $CB_STATE_DIR/logs;
@@ -65,6 +58,6 @@ cd $CB_TERRAFORM_DIR
 touch $CB_STATE_DIR/logs/$CURRENT_TIME-terraform-init.log
 terraform init 2>&1 | tee -a $CB_STATE_DIR/logs/$CURRENT_TIME-terraform-init.log
 touch $CB_STATE_DIR/logs$$CURRENT_TIME-terraform-apply.log
-terraform apply -y >> $CB_STATE_DIR/logs$$CURRENT_TIME-terraform-apply.log
+terraform apply --auto-approve >> $CB_STATE_DIR/logs/$CURRENT_TIME-terraform-apply.log
 cd $LAB_HOME
 echo 'DONE'
