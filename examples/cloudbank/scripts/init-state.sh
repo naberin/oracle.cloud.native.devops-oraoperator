@@ -12,27 +12,29 @@ STATE_LOCATION=$CB_STATE_DIR/state.json
 
 # requires Database Password
 echo -n "Retreiving set database credentials..."
-if [ "$(jq -e .lab.pwd.db $STATE_LOCATION )" ]; then
+DBVAL="$(jq -e .lab.pwd.db $STATE_LOCATION)"
+if [[ $DBVAL = null ]]; then
   echo "NOT FOUND"
   read -s -r -p "Enter the Database password to use: " DBPWD
 
   echo "$(jq --arg VAL $DBPWD '.lab.pwd.db |= $VAL' $STATE_LOCATION)" > $STATE_LOCATION
   echo "$(jq --arg VAL $DBPWD '.lab.pwd.db_wallet |= $VAL' $STATE_LOCATION)" > $STATE_LOCATION
   echo "SET"
-elif [ ! "$(jq -e .lab.pwd.db $STATE_LOCATION )" ]; then
+elif [[ ! $DBVAL = null ]]; then
   echo "DONE"
 fi
 echo ''
 
 # requires Frontend login Password
 echo -n "Retreiving set frontend credentials..."
-if [ "$(jq -e .lab.pwd.login $STATE_LOCATION )" ]; then
+LOGINVAL="$(jq -e .lab.pwd.login $STATE_LOCATION)"
+if [[ $LOGINVAL = null ]]; then
   echo "NOT FOUND"
   read -s -r -p "Enter the Frontend Login password to use: " PWD
 
   echo "$(jq --arg VAL $PWD '.lab.pwd.login |= $VAL' $STATE_LOCATION)" > $STATE_LOCATION
   echo "SET"
-elif [ ! "$(jq -e .lab.pwd.login $STATE_LOCATION )" ]; then
+elif [ ! $LOGINVAL = null ]; then
   echo "DONE"
 fi
 echo ''
@@ -40,13 +42,14 @@ echo ''
 
 # requires Reqion
 echo -n "Retreiving set region..."
-if [ "$(jq -e .lab.region $STATE_LOCATION )" ]; then
+REGIONVAL="$(jq -e .lab.region $STATE_LOCATION )"
+if [[ $REGIONVAL = null ]]; then
   echo "NOT FOUND"
   read -p "Enter the region to use (e.g. us-phoenix-1): " INP
 
   echo "$(jq --arg VAL $INP '.lab.region |= $VAL' $STATE_LOCATION)" > $STATE_LOCATION
   echo "SET"
-elif [ ! "$(jq -e .lab.region $STATE_LOCATION )" ]; then
+elif [[ ! $REGIONVAL = null ]]; then
   echo "DONE"
 fi
 echo ""
@@ -54,12 +57,13 @@ echo ""
 
 # requires compartment OCID
 echo -n "Retreiving Compartment OCID..."
-if [ "$(jq -e .lab.ocid.compartment $STATE_LOCATION )" ]; then
+COMPVAL="$(jq -e .lab.ocid.compartment $STATE_LOCATION)"
+if [[ $COMPVAL = null ]]; then
   echo "NOT FOUND"
   read -p "Enter the compartment OCID to provision resources in: " OCID
 
   echo "$(jq --arg VAL $OCID '.lab.ocid.compartment |= $VAL' $STATE_LOCATION)" > $STATE_LOCATION
-elif [ ! "$(jq -e .lab.ocid.compartment $STATE_LOCATION )" ]; then
+elif [[ ! $COMPVAL = null ]]; then
   echo 'DONE'
 fi
 echo ""
@@ -67,12 +71,13 @@ echo ""
 
 # requires tenancy OCID
 echo -n "Retreiving Tenancy OCID..."
-if [ "$(jq -e .lab.ocid.tenancy $STATE_LOCATION )" ]; then
+TENANCYVAL="$(jq -e .lab.ocid.tenancy $STATE_LOCATION)"
+if [[ $TENANCYVAL = null ]]; then
   echo "NOT FOUND"
   read -p "Enter the tenancy OCID to provision resources in: " OCID
 
   echo "$(jq --arg VAL $OCID '.lab.ocid.tenancy |= $VAL' $STATE_LOCATION)" > $STATE_LOCATION
-elif [ "$(jq -e .lab.ocid.tenancy $STATE_LOCATION )" ]; then
+elif [[ ! $TENANCYVAL = null ]]; then
   echo "DONE"
 fi
 echo ""
