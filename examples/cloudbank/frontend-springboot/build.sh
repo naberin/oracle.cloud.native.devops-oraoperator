@@ -5,9 +5,9 @@
 # Retrieve image
 if [ -z "$FRONTEND_IMAGE" ]; then
   echo "FRONTEND_IMAGE not set. Will get it from setup.json"
-  DOCKER_REGISTRY=$(jq -r .DOCKER_REGISTRY.value ../setup.json)
-  FRONTEND_IMAGE_VALUE=$(jq -r .FRONTEND.IMAGE.value ../setup.json)
-  FRONTEND_IMAGE_VERSION=$(jq -r .FRONTEND.IMAGE.version ../setup.json)
+  DOCKER_REGISTRY=$(jq -r .DOCKER_REGISTRY.value ../state.json)
+  FRONTEND_IMAGE_VALUE=$(jq -r .FRONTEND.IMAGE.value ../state.json)
+  FRONTEND_IMAGE_VERSION=$(jq -r .FRONTEND.IMAGE.version ../state.json)
   export FRONTEND_IMAGE="$DOCKER_REGISTRY/$FRONTEND_IMAGE_VALUE:$FRONTEND_IMAGE_VERSION"
 fi
 

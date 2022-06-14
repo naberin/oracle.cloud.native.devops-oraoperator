@@ -2,13 +2,13 @@
 ## Copyright (c) 2022 Oracle and/or its affiliates.
 ## Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl/
 
-CLOUDBANK_USERNAME=$(jq -r .FRONTEND.USER ../setup.json)
-CLOUDBANK_SERVICE_NAMESPACE=$(jq -r .CLOUDBANK.NAMESPACE ../setup.json)
-CLOUDBANK_SERVICE_BANKA=$(jq -r .CLOUDBANK.SERVICES.BANKA ../setup.json)
-CLOUDBANK_SERVICE_BANKB=$(jq -r .CLOUDBANK.SERVICES.BANKB ../setup.json)
-CLOUDBANK_SERVICE_PORT=$(jq -r .CLOUDBANK.SERVICES.PORT ../setup.json)
-CLOUDBANK_CREDENTIALS_SECRET_KEY=$(jq -r .SECRETS.FRONTEND_CREDENTIALS.key ../setup.json)
-CLOUDBANK_CREDENTIALS_SECRET_NAME=$(jq -r .SECRETS.FRONTEND_CREDENTIALS.name ../setup.json)
+CLOUDBANK_USERNAME=$(jq -r .FRONTEND.USER ../state.json)
+CLOUDBANK_SERVICE_NAMESPACE=$(jq -r .CLOUDBANK.NAMESPACE ../state.json)
+CLOUDBANK_SERVICE_BANKA=$(jq -r .CLOUDBANK.SERVICES.BANKA ../state.json)
+CLOUDBANK_SERVICE_BANKB=$(jq -r .CLOUDBANK.SERVICES.BANKB ../state.json)
+CLOUDBANK_SERVICE_PORT=$(jq -r .CLOUDBANK.SERVICES.PORT ../state.json)
+CLOUDBANK_CREDENTIALS_SECRET_KEY=$(jq -r .SECRETS.FRONTEND_CREDENTIALS.key ../state.json)
+CLOUDBANK_CREDENTIALS_SECRET_NAME=$(jq -r .SECRETS.FRONTEND_CREDENTIALS.name ../state.json)
 
 # Build APIs
 CLOUDBANK_APIS_BANKA=http://${CLOUDBANK_SERVICE_BANKA}.${CLOUDBANK_SERVICE_NAMESPACE}:${CLOUDBANK_SERVICE_PORT}
@@ -18,9 +18,9 @@ export CURRENTTIME=generated
 # Retrieve image
 if [ -z "$FRONTEND_IMAGE" ]; then
   echo "FRONTEND_IMAGE not set. Will get it from setup.json"
-  DOCKER_REGISTRY=$(jq -r .DOCKER_REGISTRY.value ../setup.json)
-  FRONTEND_IMAGE_VALUE=$(jq -r .FRONTEND.IMAGE.value ../setup.json)
-  FRONTEND_IMAGE_VERSION=$(jq -r .FRONTEND.IMAGE.version ../setup.json)
+  DOCKER_REGISTRY=$(jq -r .DOCKER_REGISTRY.value ../state.json)
+  FRONTEND_IMAGE_VALUE=$(jq -r .FRONTEND.IMAGE.value ../state.json)
+  FRONTEND_IMAGE_VERSION=$(jq -r .FRONTEND.IMAGE.version ../state.json)
   export FRONTEND_IMAGE="${DOCKER_REGISTRY}/${FRONTEND_IMAGE_VALUE}:${FRONTEND_IMAGE_VERSION}"
 fi
 

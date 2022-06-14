@@ -3,11 +3,11 @@
 ## Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl/
 
 SCRIPT_DIR=$(dirname $0)
-DB_WALLET_SECRET=$(jq .SECRETS.DB_WALLET_SECRET.name ../setup.json)
+DB_WALLET_SECRET=$(jq .SECRETS.DB_WALLET_SECRET.name ../state.json)
 
 if [ -z "$DOCKER_REGISTRY" ]; then
     echo "DOCKER_REGISTRY not set. Will get it from setup.json"
-    export $DOCKER_REGISTRY=$(jq .DOCKER_REGISTRY.value ../setup.json)
+    export $DOCKER_REGISTRY=$(jq .DOCKER_REGISTRY.value ../state.json)
 fi
 
 if [ -z "$DOCKER_REGISTRY" ]; then
@@ -17,7 +17,7 @@ fi
 
 if [ -z "$ORDER_DB_NAME" ]; then
     echo "ORDER_DB_NAME not set. Will get it from setup.json"
-  export ORDER_DB_NAME=$(jq .CLOUDBANK.DATABASE.name ../setup.json)
+  export ORDER_DB_NAME=$(jq .CLOUDBANK.DATABASE.name ../state.json)
 fi
 
 if [ -z "$ORDER_DB_NAME" ]; then
