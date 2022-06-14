@@ -19,7 +19,7 @@ chmod 700 $CB_STATE_DIR/generated;
 chmod 700 $CB_STATE_DIR/logs;
 
 echo 'DONE'
-
+echo ''
 
 # Copy JSON as new state
 echo - 'Checking State file...'
@@ -30,31 +30,30 @@ if [ ! -f $CB_STATE_DIR/state.json ]; then
   chmod 700 $CB_STATE_DIR/state.json
 fi
 echo 'DONE'
-
+echo ''
 
 # Copy Kubernetes scripts
 echo -n 'Copying Lab related scripts...'
 cp -r $CB_ROOT_DIR/scripts/* $CB_STATE_DIR
 echo 'DONE'
-
+echo ''
 
 # Copy Terraform into state directory
 echo -n 'Copying Lab terraform files...'
 cp -r $CB_ROOT_DIR/terraform $CB_TERRAFORM_DIR
 echo 'DONE'
-
+echo ''
 
 # Prompt user for input on setup
 echo 'The lab requires more information...'
 $CB_STATE_DIR/init-state.sh
-echo 'DONE'
-
+echo ''
 
 # Generate Terraform Vars file
 echo 'Preparing terraform...'
-$CB_TERRAFORM_DIR/terraform-env.sh
+source $CB_TERRAFORM_DIR/terraform-env.env
 echo 'DONE'
-
+echo ''
 
 # Run terraform
 echo -n 'Creating cloud infrastructure resources...'
@@ -64,4 +63,3 @@ terraform init 2>&1 | tee -a $CB_STATE_DIR/logs/$CURRENT_TIME-terraform-init.log
 touch $CB_STATE_DIR/logs$$CURRENT_TIME-terraform-apply.log
 terraform apply --auto-approve >> $CB_STATE_DIR/logs/$CURRENT_TIME-terraform-apply.log
 cd $LAB_HOME
-echo 'DONE'
