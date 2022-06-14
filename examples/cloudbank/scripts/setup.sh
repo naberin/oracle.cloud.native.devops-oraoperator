@@ -42,7 +42,7 @@ echo ''
 
 # Copy Terraform into state directory
 echo -n 'Copying Lab terraform files...'
-cp -r $CB_ROOT_DIR/terraform $CB_TERRAFORM_DIR
+cp -r $CB_ROOT_DIR/terraform/* $CB_TERRAFORM_DIR
 echo 'DONE'
 echo ''
 
