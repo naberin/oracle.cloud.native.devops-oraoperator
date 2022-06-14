@@ -19,9 +19,10 @@ if [ "$(jq -e .lab.pwd.db $STATE_LOCATION )" ]; then
   echo "$(jq --arg VAL $DBPWD '.lab.pwd.db |= $VAL' $STATE_LOCATION)" > $STATE_LOCATION
   echo "$(jq --arg VAL $DBPWD '.lab.pwd.db_wallet |= $VAL' $STATE_LOCATION)" > $STATE_LOCATION
   echo "SET"
+elif [ ! "$(jq -e .lab.pwd.db $STATE_LOCATION )" ]; then
+  echo "DONE"
 fi
-echo "DONE"
-
+echo ''
 
 # requires Frontend login Password
 echo -n "Retreiving set frontend credentials..."
@@ -31,8 +32,10 @@ if [ "$(jq -e .lab.pwd.login $STATE_LOCATION )" ]; then
 
   echo "$(jq --arg VAL $PWD '.lab.pwd.login |= $VAL' $STATE_LOCATION)" > $STATE_LOCATION
   echo "SET"
+elif [ ! "$(jq -e .lab.pwd.login $STATE_LOCATION )" ]; then
+  echo "DONE"
 fi
-echo "DONE"
+echo ''
 
 
 # requires Reqion
@@ -43,8 +46,10 @@ if [ "$(jq -e .lab.region $STATE_LOCATION )" ]; then
 
   echo "$(jq --arg VAL $INP '.lab.region |= $VAL' $STATE_LOCATION)" > $STATE_LOCATION
   echo "SET"
+elif [ ! "$(jq -e .lab.region $STATE_LOCATION )" ]; then
+  echo "DONE"
 fi
-echo "DONE"
+echo ""
 
 
 # requires compartment OCID
@@ -54,9 +59,10 @@ if [ "$(jq -e .lab.ocid.compartment $STATE_LOCATION )" ]; then
   read -p "Enter the compartment OCID to provision resources in: " OCID
 
   echo "$(jq --arg VAL $OCID '.lab.ocid.compartment |= $VAL' $STATE_LOCATION)" > $STATE_LOCATION
-  echo "SET"
+elif [ ! "$(jq -e .lab.ocid.compartment $STATE_LOCATION )" ]; then
+  echo 'DONE'
 fi
-echo "DONE"
+echo ""
 
 
 # requires tenancy OCID
@@ -66,9 +72,10 @@ if [ "$(jq -e .lab.ocid.tenancy $STATE_LOCATION )" ]; then
   read -p "Enter the tenancy OCID to provision resources in: " OCID
 
   echo "$(jq --arg VAL $OCID '.lab.ocid.tenancy |= $VAL' $STATE_LOCATION)" > $STATE_LOCATION
-  echo "SET"
+elif [ "$(jq -e .lab.ocid.tenancy $STATE_LOCATION )" ]; then
+  echo "DONE"
 fi
-echo "DONE"
+echo ""
 
 
 # requires OCIR registry
@@ -78,6 +85,5 @@ read -p "Enter the OCI Registry to use: [$LAB] " OCID
 
 if [ -n "$OCID" ]; then
   echo "$(jq --arg VAL $OCID '.lab.docker_registry |= $VAL' $STATE_LOCATION)" > $STATE_LOCATION
-  echo "SET"
 fi
-echo "DONE"
+echo ""

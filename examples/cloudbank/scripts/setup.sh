@@ -22,7 +22,7 @@ echo 'DONE'
 echo ''
 
 # Copy JSON as new state
-echo - 'Checking State file...'
+echo -n 'Checking State file...'
 if [ ! -f $CB_STATE_DIR/state.json ]; then
   echo 'Not Found'
   echo -n 'Generating State file...'
@@ -51,7 +51,7 @@ echo ''
 
 # Generate Terraform Vars file
 echo 'Preparing terraform...'
-source $CB_TERRAFORM_DIR/terraform-env.env
+source $CB_TERRAFORM_DIR/terraform.env
 echo 'DONE'
 echo ''
 
