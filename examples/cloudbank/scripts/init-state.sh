@@ -6,7 +6,7 @@
 # - Region
 # - Compartment OCID
 # - Setup Config
-# -
+
 
 # requires Database Password
 echo -n "Retreiving set database credentials..."
