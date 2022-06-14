@@ -4,8 +4,6 @@ resource oci_containerengine_cluster cloudbank {
   }
   endpoint_config {
     is_public_ip_enabled = "true"
-    nsg_ids = [
-    ]
     subnet_id = oci_core_subnet.regional_apiendpoint_subnet.id
   }
   freeform_tags = {
@@ -47,10 +45,8 @@ resource oci_containerengine_node_pool pool {
   kubernetes_version = "v1.23.4"
   name               = "cloudbank-pool"
   node_config_details {
-    nsg_ids = []
     placement_configs {
       availability_domain = data.oci_identity_availability_domain.ad1.name
-      fault_domains = []
       subnet_id = oci_core_subnet.regional_node_subnet.id
     }
     size = "3"
