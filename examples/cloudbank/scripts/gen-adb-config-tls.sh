@@ -17,7 +17,7 @@ if [ "$(jq -e .lab.ocid.adb $STATE_LOCATION )" ]; then
   fi
 
   echo $(jq --arg VAL $OCID '.lab.ocid.adb |= $VAL' $STATE_LOCATION) > $STATE_LOCATION
-  echo "adb_ocid set."
+  echo "DONE"
 fi
 echo ""
 
@@ -35,8 +35,8 @@ echo "DONE"
 
 # Replacing Compartment OCID
 echo -n "Updating generated YAML file..."
-sed -e  "s|%ADB_OCID%|$ADB_OCID|g" $YAML_FILE > /tmp/adb-create.yaml
-mv -- /tmp/adb-create.yaml $YAML_FILE
+sed -e  "s|%ADB_OCID%|$ADB_OCID|g" $YAML_FILE > /tmp/adb-tls.yaml
+mv -- /tmp/adb-tls.yaml $YAML_FILE
 echo "DONE"
 
 

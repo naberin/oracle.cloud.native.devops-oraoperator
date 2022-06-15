@@ -11,9 +11,8 @@ if [ "$(jq -e .lab.ocid.compartment $STATE_LOCATION )" ]; then
   read -p "Enter the compartment OCID to provision resources in: " OCID
 
   echo $(jq --arg VAL $OCID '.lab.ocid.compartment |= $VAL' $STATE_LOCATION) > $STATE_LOCATION
-  echo "compartment_ocid set."
 fi
-echo "DONE"
+echo ""
 
 
 # Set compartment OCID variable

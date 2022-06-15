@@ -6,6 +6,7 @@
 # - Region
 # - Compartment OCID
 # - Tenancy OCID
+# - Fingerprint
 # - Setup Config
 STATE_LOCATION=$CB_STATE_DIR/state.json
 
@@ -83,6 +84,20 @@ fi
 echo ""
 
 
+# requires Fingerprint
+echo -n "Retreiving user fingerprint..."
+FPRINTVAL="$(jq -e .lab.sk.fingerprint $STATE_LOCATION)"
+if [[ $FPRINTVAL = null ]]; then
+  echo "NOT FOUND"
+  read -p "Enter user fingerprint to provision resources in: " FPRINTVAL
+
+  echo "$(jq --arg VAL FPRINTVAL '.lab.sk.fingerprint |= $VAL' $STATE_LOCATION)" > $STATE_LOCATION
+elif [[ ! $TENANCYVAL = null ]]; then
+  echo "DONE"
+fi
+echo ""
+
+
 # requires OCIR registry
 echo "Setting Docker Registry..."
 LAB="$(jq -r .lab.docker_registry $STATE_LOCATION )"
@@ -92,3 +107,4 @@ if [ -n "$OCID" ]; then
   echo "$(jq --arg VAL $OCID '.lab.docker_registry |= $VAL' $STATE_LOCATION)" > $STATE_LOCATION
 fi
 echo ""
+

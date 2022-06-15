@@ -26,7 +26,7 @@ echo ''
 # Copy JSON as new state
 echo -n 'Checking State file...'
 if [ ! -f $CB_STATE_DIR/state.json ]; then
-  echo 'Not Found'
+  echo 'NOT FOUND'
   echo -n 'Generating State file...'
   cp $CB_ROOT_DIR/state.json $CB_STATE_DIR/state.json
   chmod 700 $CB_STATE_DIR/state.json
@@ -37,6 +37,7 @@ echo ''
 # Copy Kubernetes scripts
 echo -n 'Copying Lab related scripts...'
 cp -r $CB_ROOT_DIR/scripts/* $CB_STATE_DIR
+cp -r
 echo 'DONE'
 echo ''
 

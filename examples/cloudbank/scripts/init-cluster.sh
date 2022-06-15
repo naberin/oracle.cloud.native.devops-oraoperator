@@ -3,8 +3,16 @@
 # - namespace
 # - secret for fixed database objects
 
+# todo: make sure state_get exists
+# todo: handle if kubernetes cluster not setup
+
+
+
 # Apply Namespace
+NS=$(state_get .namespace)
 kubectl apply -f $CB_KUBERNETES_TEMPLATES_DIR/namespace.yaml
+kubectl config set-context --current --namespace=$NS
+kubectl config view --minify | grep namespace:
 
 
 # Create Secret
