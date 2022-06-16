@@ -37,9 +37,12 @@ echo ''
 # Copy Kubernetes scripts
 echo -n 'Copying Lab related scripts...'
 cp -r $CB_ROOT_DIR/scripts/* $CB_STATE_DIR
-cp -r
+#cp -r $CB_ROOT_DIR/source.env $CB_STATE_DIR/source.env
 echo 'DONE'
 echo ''
+
+# Set source env inside bashrc
+cat $CB_ROOT_DIR/source.env >> ~/.bashrc
 
 # Copy Terraform into state directory
 echo -n 'Copying Lab terraform files...'
