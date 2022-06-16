@@ -8,6 +8,13 @@
             "bankb": "bankb",
             "port": 8080
         },
+        "backend": {
+            "pdb_name": "cloudbank",
+            "image": {
+                "name": "transfer-springboot",
+                "version": 0.1
+            }
+        },
         "frontend": {
             "user": "cloudbank",
             "image": {

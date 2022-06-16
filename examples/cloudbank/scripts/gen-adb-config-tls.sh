@@ -5,8 +5,9 @@ STATE_LOCATION=$CB_STATE_DIR/state.json
 
 
 # requires Autonomous Database OCID
-echo "Retreiving Autonomous Database OCID"
-if [ "$(jq -e .lab.ocid.adb $STATE_LOCATION )" ]; then
+echo -n "Retreiving Autonomous Database OCID"
+ADBOCID="$(jq -e .lab.ocid.adb $STATE_LOCATION )"
+if [[ $ADBOCID == null ]]; then
 
   OCID=$(kubectl get AutonomousDatabase/cloudbankdb -o jsonpath='{.spec.details.autonomousDatabaseOCID}')
 
@@ -22,7 +23,7 @@ fi
 echo ""
 
 
-# Set ADB OCID variable
+# Get ADB OCID variable
 ADB_OCID=$(state_get .lab.ocid.adb)
 
 
