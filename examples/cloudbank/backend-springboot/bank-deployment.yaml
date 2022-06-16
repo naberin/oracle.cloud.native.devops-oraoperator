@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: bank
-        image: $BACKEND_IMAGE%
+        image: %BACKEND_IMAGE%
         imagePullPolicy: Always
         env:
         - name: localbankqueueschema
