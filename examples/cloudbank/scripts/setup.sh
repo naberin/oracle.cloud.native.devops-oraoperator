@@ -42,7 +42,9 @@ echo 'DONE'
 echo ''
 
 # Set source env inside bashrc
-cat $CB_ROOT_DIR/source.env >> ~/.bashrc
+echo -n 'Saving lab settings...'
+$CB_ROOT_DIR/save_source.sh
+echo 'DONE'
 
 # Copy Terraform into state directory
 echo -n 'Copying Lab terraform files...'

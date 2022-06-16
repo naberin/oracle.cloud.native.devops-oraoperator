@@ -3,7 +3,6 @@
 # initialization
 STATE_LOCATION=$CB_STATE_DIR/state.json
 
-
 # requires compartment OCID
 echo -n "Retreiving Compartment OCID..."
 COMPOCID="$(jq -e .lab.ocid.compartment $STATE_LOCATION )"
