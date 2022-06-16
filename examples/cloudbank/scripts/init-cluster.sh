@@ -7,7 +7,6 @@
 # todo: handle if kubernetes cluster not setup
 
 
-
 # Apply Namespace
 NS=$(state_get .namespace)
 kubectl apply -f $CB_KUBERNETES_TEMPLATES_DIR/namespace.yaml
