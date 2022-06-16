@@ -16,6 +16,6 @@ docker build -t "$FRONTEND_IMAGE" .
 
 # Push to Registry
 docker push "$FRONTEND_IMAGE"
-if [  $?+ -eq 0 ]; then
+if [  $? -eq 0 ]; then
     docker rmi "$FRONTEND_IMAGE"
 fi

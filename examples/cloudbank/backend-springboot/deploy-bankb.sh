@@ -47,7 +47,7 @@ mv -- /tmp/bank-deployment-$CURRENTTIME.yaml $BANKB_DEPLOYMENT
 
 sed -e  "s|%remotebankqueueschema%|aquser|g" $BANKB_DEPLOYMENT > /tmp/bank-deployment-$CURRENTTIME.yaml
 mv -- /tmp/bank-deployment-$CURRENTTIME.yaml $BANKB_DEPLOYMENT
-sed -e  "s|%remotebankqueuename%|BANKBQUEUE|g" $BANKB_DEPLOYMENT > /tmp/bank-deployment-$CURRENTTIME.yaml
+sed -e  "s|%remotebankqueuename%|BANKAQUEUE|g" $BANKB_DEPLOYMENT > /tmp/bank-deployment-$CURRENTTIME.yaml
 mv -- /tmp/bank-deployment-$CURRENTTIME.yaml $BANKB_DEPLOYMENT
 
 # apply resource files
