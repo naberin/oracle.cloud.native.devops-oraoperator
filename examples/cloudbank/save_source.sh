@@ -5,7 +5,7 @@
 
 
 if [ -f ~/.bashrc ]; then
-
+  # for BASH
   echo """
   # ====================== BEGIN CLOUDBANK SOURCE ENV ======================
 
@@ -23,7 +23,7 @@ if [ -f ~/.bashrc ]; then
 
 
 elif [ -f ~/.zshrc ]; then
-
+  # for ZSH
   echo """
   # ====================== BEGIN CLOUDBANK SOURCE ENV ======================
 

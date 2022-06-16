@@ -21,25 +21,23 @@ chmod 700 $CB_STATE_DIR/logs;
 chmod 700 $CB_STATE_DIR/terraform;
 
 echo 'DONE'
-echo ''
+
 
 # Copy JSON as new state
-echo -n 'Checking State file...'
+echo -n 'Checking state file...'
 if [ ! -f $CB_STATE_DIR/state.json ]; then
   echo 'NOT FOUND'
-  echo -n 'Generating State file...'
+  echo -n 'Generating state file...'
   cp $CB_ROOT_DIR/state.json $CB_STATE_DIR/state.json
   chmod 700 $CB_STATE_DIR/state.json
 fi
 echo 'DONE'
-echo ''
 
 # Copy Kubernetes scripts
 echo -n 'Copying Lab related scripts...'
 cp -r $CB_ROOT_DIR/scripts/* $CB_STATE_DIR
-#cp -r $CB_ROOT_DIR/source.env $CB_STATE_DIR/source.env
 echo 'DONE'
-echo ''
+
 
 # Set source env inside bashrc
 echo -n 'Saving lab settings...'
@@ -53,9 +51,9 @@ echo 'DONE'
 echo ''
 
 # Prompt user for input on setup
-echo 'The lab requires more information...'
+echo "================================================="
+echo 'To continue, the lab requires more information...'
 $CB_STATE_DIR/init-state.sh
-echo ''
 
 
 # Run terraform
