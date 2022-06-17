@@ -4,9 +4,9 @@
 
 # building image string
 if [ -z "$BACKEND_IMAGE" ]; then
-  REGISTRY=$(jq -r .lab.docker_registry $CB_STATE_DIR/state.json)
-  IMG=$(jq -r .app.backend.image.name $CB_STATE_DIR/state.json)
-  VERSION=$(jq -r .app.backend.image.version $CB_STATE_DIR/state.json)
+  REGISTRY=$(state_get .lab.docker_registry)
+  IMG=$(state_get .app.backend.image.name)
+  VERSION=$(state_get .app.backend.image.version)
   export BACKEND_IMAGE="$REGISTRY/$IMG:$VERSION"
 fi
 

@@ -14,50 +14,36 @@ STATE_LOCATION=$CB_STATE_DIR/state.json
 
 # requires Database Password
 read -s -r -p "Enter the Database password to use: " DBPWD
-echo "$(jq --arg VAL $DBPWD '.lab.pwd.db |= $VAL' $STATE_LOCATION)" > $STATE_LOCATION
-echo "$(jq --arg VAL $DBPWD '.lab.pwd.db_wallet |= $VAL' $STATE_LOCATION)" > $STATE_LOCATION
+state_set '.lab.pwd.db |= $VAL' $DBPWD
+state_set '.lab.pwd.db_wallet |= $VAL' $DBPWD
 echo "SET"
-echo ""
 
 # requires Frontend login Password"
 read -s -r -p "Enter the Frontend Login password to use: " FEPWD
-echo "$(jq --arg VAL $FEPWD '.lab.pwd.login |= $VAL' $STATE_LOCATION)" > $STATE_LOCATION
+state_set '.lab.pwd.login |= $VAL' $FEPWD
 echo "SET"
-echo ''
 
 # requires Reqion
 read -p "Enter the region to use (e.g. us-phoenix-1): " INP
-echo "$(jq --arg VAL $INP '.lab.region |= $VAL' $STATE_LOCATION)" > $STATE_LOCATION
-echo "SET"
-echo ''
+state_set '.lab.region |= $VAL' $INP
 
 # requires compartment OCID
 read -p "Enter the compartment OCID to provision resources in: " OCID
-echo "$(jq --arg VAL $OCID '.lab.ocid.compartment |= $VAL' $STATE_LOCATION)" > $STATE_LOCATION
-echo "SET"
-echo ''
+state_set '.lab.ocid.compartment |= $VAL' $OCID
 
 # requires tenancy OCID
 read -p "Enter the tenancy OCID to provision resources in: " tOCID
-echo "$(jq --arg VAL $tOCID '.lab.ocid.tenancy |= $VAL' $STATE_LOCATION)" > $STATE_LOCATION
-echo "SET"
-echo ''
+state_set '.lab.ocid.tenancy |= $VAL' $tOCID
 
 # requires user OCID
 read -p "Enter the user OCID to provision resources in: " uOCID
-echo "$(jq --arg VAL $uOCID '.lab.ocid.user |= $VAL' $STATE_LOCATION)" > $STATE_LOCATION
-echo "SET"
-echo ''
+state_set '.lab.ocid.user |= $VAL' $uOCID
 
 # requires Fingerprint
 read -p "Enter user fingerprint to provision resources in: " fPRINTVAL
-echo "$(jq --arg VAL $fPRINTVAL '.lab.apikey.fingerprint |= $VAL' $STATE_LOCATION)" > $STATE_LOCATION
-echo "SET"
-echo ''
+state_set '.lab.apikey.fingerprint |= $VAL' $fPRINTVAL
 
 # requires OCIR registry
 LAB="$(jq -r .lab.docker_registry $STATE_LOCATION )"
 read -p "Enter the OCI Registry to use: [$LAB] " OCID
-echo "$(jq --arg VAL $OCID '.lab.docker_registry |= $VAL' $STATE_LOCATION)" > $STATE_LOCATION
-echo "SET"
-echo ''
+state_set '.lab.docker_registry |= $VAL' $OCID

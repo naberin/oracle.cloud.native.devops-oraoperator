@@ -4,9 +4,9 @@
 
 # Retrieve image
 if [ -z "$FRONTEND_IMAGE" ]; then
-  DOCKER_REGISTRY=$(jq -r .lab.docker_registry $CB_STATE_DIR/state.json)
-  IMG=$(jq -r .app.frontend.image.name $CB_STATE_DIR/state.json)
-  VERSION=$(jq -r .app.frontend.image.version $CB_STATE_DIR/state.json)
+  DOCKER_REGISTRY=$(state_get .lab.docker_registry)
+  IMG=$(state_get .app.frontend.image.name)
+  VERSION=$(state_get .app.frontend.image.version)
   export FRONTEND_IMAGE="$DOCKER_REGISTRY/$IMG:$VERSION"
 fi
 

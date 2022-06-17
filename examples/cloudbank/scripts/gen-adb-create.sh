@@ -5,12 +5,11 @@ STATE_LOCATION=$CB_STATE_DIR/state.json
 
 # requires compartment OCID
 echo -n "Retreiving Compartment OCID..."
-COMPOCID="$(jq -e .lab.ocid.compartment $STATE_LOCATION )"
+COMPOCID="$(state_get .lab.ocid.compartment)"
 if [[ $COMPOCID == null ]]; then
   echo "NOT FOUND"
   read -p "Enter the compartment OCID to provision resources in: " OCID
-
-  echo $(jq --arg VAL $OCID '.lab.ocid.compartment |= $VAL' $STATE_LOCATION) > $STATE_LOCATION
+  state_set '.lab.ocid.compartment |= $VAL' $OCID
 elif [[ ! $COMPOCID == null ]]; then
   echo "DONE"
 fi

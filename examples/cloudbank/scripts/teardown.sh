@@ -4,10 +4,11 @@ CURRENT_TIME=$( date '+%F_%H:%M:%S' )
 # terminate Database and Loadbalancer
 touch $CB_STATE_DIR/logs/$CURRENT_TIME-kubectl-version.log
 
+# if kubernetes cluster exists
 if kubectl version >> $CB_STATE_DIR/logs/$CURRENT_TIME-kubectl-version.log; then
   # todo: check if services and loadblaancer are properly deleted
   kubectl delete AutonomousDatabase/cloudbankdb
-  kubectl delete service/cloudbank-service
+  kubectl delete service/frontend-service
 fi
 
 # teardown infrastructure resources

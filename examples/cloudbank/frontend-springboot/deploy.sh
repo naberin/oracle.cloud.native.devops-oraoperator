@@ -2,13 +2,13 @@
 ## Copyright (c) 2022 Oracle and/or its affiliates.
 ## Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl/
 
-CLOUDBANK_USERNAME=$(jq -r .app.frontend.user $CB_STATE_DIR/state.json)
-CLOUDBANK_SERVICE_NAMESPACE=$(jq -r .namespace $CB_STATE_DIR/state.json)
-CLOUDBANK_SERVICE_BANKA=$(jq -r .app.services.banka $CB_STATE_DIR/state.json)
-CLOUDBANK_SERVICE_BANKB=$(jq -r .app.services.bankb $CB_STATE_DIR/state.json)
-CLOUDBANK_SERVICE_PORT=$(jq -r .app.services.port $CB_STATE_DIR/state.json)
-CLOUDBANK_CREDENTIALS_SECRET_KEY=$(jq -r .app.secrets.FRONTEND_CREDENTIALS.key $CB_STATE_DIR/state.json)
-CLOUDBANK_CREDENTIALS_SECRET_NAME=$(jq -r .app.secrets.FRONTEND_CREDENTIALS.name $CB_STATE_DIR/state.json)
+CLOUDBANK_USERNAME=$(state_get .app.frontend.user)
+CLOUDBANK_SERVICE_NAMESPACE=$(state_get .namespace)
+CLOUDBANK_SERVICE_BANKA=$(state_get .app.services.banka)
+CLOUDBANK_SERVICE_BANKB=$(state_get .app.services.bankb)
+CLOUDBANK_SERVICE_PORT=$(state_get .app.services.port)
+CLOUDBANK_CREDENTIALS_SECRET_KEY=$(state_get .app.secrets.FRONTEND_CREDENTIALS.key)
+CLOUDBANK_CREDENTIALS_SECRET_NAME=$(state_get .app.secrets.FRONTEND_CREDENTIALS.name)
 
 # Build APIs
 CLOUDBANK_APIS_BANKA=http://${CLOUDBANK_SERVICE_BANKA}.${CLOUDBANK_SERVICE_NAMESPACE}:${CLOUDBANK_SERVICE_PORT}
@@ -18,9 +18,9 @@ export CURRENTTIME=generated
 # Retrieve image
 if [ -z "$FRONTEND_IMAGE" ]; then
   echo "FRONTEND_IMAGE not set. Will get it from setup.json"
-  DOCKER_REGISTRY=$(jq -r .lab.docker_registry $CB_STATE_DIR/state.json)
-  FRONTEND_IMAGE_VALUE=$(jq -r .app.frontend.image.name $CB_STATE_DIR/state.json)
-  FRONTEND_IMAGE_VERSION=$(jq -r .app.frontend.image.version $CB_STATE_DIR/state.json)
+  DOCKER_REGISTRY=$(state_get .lab.docker_registry)
+  FRONTEND_IMAGE_VALUE=$(state_get .app.frontend.image.name)
+  FRONTEND_IMAGE_VERSION=$(state_get .app.frontend.image.version)
   export FRONTEND_IMAGE="${DOCKER_REGISTRY}/${FRONTEND_IMAGE_VALUE}:${FRONTEND_IMAGE_VERSION}"
 fi
 

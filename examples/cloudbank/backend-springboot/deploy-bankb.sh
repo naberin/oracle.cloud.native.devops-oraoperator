@@ -4,16 +4,16 @@
 
 # building image string
 if [ -z "$BACKEND_IMAGE" ]; then
-  DOCKER_REGISTRY=$(jq -r .lab.docker_registry $CB_STATE_DIR/state.json)
-  IMG=$(jq -r .app.backend.image.name $CB_STATE_DIR/state.json)
-  VERSION=$(jq -r .app.backend.image.version $CB_STATE_DIR/state.json)
+  DOCKER_REGISTRY=$(state_get .lab.docker_registry)
+  IMG=$(state_get .app.backend.image.name)
+  VERSION=$(state_get .app.backend.image.version)
   export BACKEND_IMAGE="$DOCKER_REGISTRY/$IMG:$VERSION"
 fi
 
 # other
-BANK_NAME=$(jq -r .app.services.bankb $CB_STATE_DIR/state.json)
-DB_WALLET_SECRET=$(jq -r .app.secrets.DB_WALLET_SECRET $CB_STATE_DIR/state.json)
-DB_NAME=$(jq -r .app.backend.pdb_name $CB_STATE_DIR/state.json)
+BANK_NAME=$(state_get .app.services.bankb)
+DB_WALLET_SECRET=$(state_get .app.secrets.DB_WALLET_SECRET)
+DB_NAME=$(state_get .app.backend.pdb_name)
 
 echo -n create bankb deployment and service...
 export CURRENTTIME=generated
