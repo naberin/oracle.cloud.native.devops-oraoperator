@@ -21,7 +21,7 @@ docker push "$BACKEND_IMAGE"
 
 # cleanup
 if [  $? -eq 0 ]; then
-    docker rmi "$IMAGE"
+    docker rmi "$BACKEND_IMAGE"
 fi
 
 
