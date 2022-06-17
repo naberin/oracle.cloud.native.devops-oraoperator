@@ -52,7 +52,6 @@ mv -- /tmp/manifest-$CURRENTTIME.yaml $FRONTEND_MANIFEST
 sed -e  "s|%CLOUDBANK_APIS_BANKB%|$CLOUDBANK_APIS_BANKB|g" $FRONTEND_MANIFEST > /tmp/manifest-$CURRENTTIME.yaml
 mv -- /tmp/manifest-$CURRENTTIME.yaml $FRONTEND_MANIFEST
 
-
 # Apply Manifest
 kubectl apply -f $FRONTEND_MANIFEST
 
