@@ -49,7 +49,7 @@ resource oci_containerengine_node_pool pool {
       availability_domain = data.oci_identity_availability_domain.ad1.name
       subnet_id = oci_core_subnet.regional_node_subnet.id
     }
-    size = "3"
+    size = "2"
   }
   node_shape = var.instance_shape
   node_shape_config {

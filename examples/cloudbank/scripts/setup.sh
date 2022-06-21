@@ -16,9 +16,11 @@ mkdir -p $CB_STATE_DIR;
 mkdir -p $CB_STATE_DIR/terraform;
 mkdir -p $CB_STATE_DIR/generated;
 mkdir -p $CB_STATE_DIR/logs;
+mkdir -p $CB_STATE_DIR/tls;
 chmod 700 $CB_STATE_DIR/generated;
 chmod 700 $CB_STATE_DIR/logs;
 chmod 700 $CB_STATE_DIR/terraform;
+chmod 700 $CB_STATE_DIR/tls;
 
 echo 'DONE'
 

@@ -1,7 +1,7 @@
 FROM maven:3.6.3-openjdk-11 AS maven_build
-COPY pom.xml /tmp/
-COPY src /tmp/src/
-WORKDIR /tmp/
+# todo: dont use tmp
+COPY src /app
+WORKDIR /app
 FROM openjdk
 EXPOSE 8080
 ARG JAR_FILE=target/*.jar
