@@ -21,7 +21,6 @@ chmod 700 $CB_STATE_DIR/generated;
 chmod 700 $CB_STATE_DIR/logs;
 chmod 700 $CB_STATE_DIR/terraform;
 chmod 700 $CB_STATE_DIR/tls;
-
 echo 'DONE'
 
 
