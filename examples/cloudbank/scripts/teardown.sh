@@ -8,6 +8,9 @@ touch $CB_STATE_DIR/logs/$CURRENT_TIME-kubectl-version.log
 if kubectl version >> $CB_STATE_DIR/logs/$CURRENT_TIME-kubectl-version.log; then
   # todo: check if services and loadblaancer are properly deleted
   ./gen-adb-delete.sh
+  kubectl apply -f $CB_STATE_DIR/generated/adb-delete.yaml
+  kubectl delete AutonomousDatabase/cloudbankdb
+
   
   kubectl delete service/frontend-service
 fi
