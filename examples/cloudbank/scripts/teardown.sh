@@ -7,7 +7,8 @@ touch $CB_STATE_DIR/logs/$CURRENT_TIME-kubectl-version.log
 # if kubernetes cluster exists
 if kubectl version >> $CB_STATE_DIR/logs/$CURRENT_TIME-kubectl-version.log; then
   # todo: check if services and loadblaancer are properly deleted
-  kubectl delete AutonomousDatabase/cloudbankdb
+  ./gen-adb-delete.sh
+  
   kubectl delete service/frontend-service
 fi
 

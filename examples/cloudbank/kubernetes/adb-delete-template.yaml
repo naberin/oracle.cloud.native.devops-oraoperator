@@ -5,7 +5,7 @@ metadata:
 spec:
   details:
     compartmentOCID: %ADB_OCID%
-  hardLink: true
+    lifecycleState: TERMINATED
   ociConfig:
     configMapName: oci-cred
     secretName: oci-privatekey
