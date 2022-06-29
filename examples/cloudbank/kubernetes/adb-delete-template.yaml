@@ -9,3 +9,5 @@ spec:
   ociConfig:
     configMapName: oci-cred
     secretName: oci-privatekey
+
+
