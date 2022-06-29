@@ -28,7 +28,7 @@ public class WebSecurityConfig {
 
         httpSecurity.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
 
-        httpSecurity.authorizeRequests().anyRequest().authenticated().and().formLogin();
+        httpSecurity.authorizeRequests().anyRequest().authenticated().and().httpBasic();
 
         return httpSecurity.build();
 
