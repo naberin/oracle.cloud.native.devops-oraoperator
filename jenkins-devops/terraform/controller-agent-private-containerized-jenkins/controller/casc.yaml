@@ -1,0 +1,20 @@
+jenkins:
+  numExecutors: 0 # Controller will have no executors
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+       - id: ${JENKINS_ADMIN_ID}
+         password: ${JENKINS_ADMIN_PASSWORD}
+  authorizationStrategy:
+      loggedInUsersCanDoAnything:
+        allowAnonymousRead: false
+tool:
+  maven:
+    installations:
+      - name: m3
+        properties:
+          - installSource:
+              installers:
+                - maven:
+                    id: "3.8.6"
