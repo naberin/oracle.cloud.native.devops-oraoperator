@@ -2,7 +2,7 @@ apiVersion: database.oracle.com/v1alpha1
 kind: AutonomousDatabase
 metadata:
   name: cloudbankdb
-  namespace: cloudbank-app
+  namespace: cloudbank
 spec:
   details:
     autonomousDatabaseOCID: %ADB_OCID%
@@ -19,7 +19,7 @@ apiVersion: database.oracle.com/v1alpha1
 kind: AutonomousDatabase
 metadata:
   name: cloudbankdb
-  namespace: cloudbank-app  
+  namespace: cloudbank
 spec:
   details:
     autonomousDatabaseOCID: %ADB_OCID%

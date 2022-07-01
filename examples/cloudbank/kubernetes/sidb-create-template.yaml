@@ -2,7 +2,7 @@ apiVersion: database.oracle.com/v1alpha1
 kind: SingleInstanceDatabase
 metadata:
   name: cloudbankdb
-  namespace: cloudbank-db
+  namespace: cloudbank
 spec:
 
   ## DB edition
