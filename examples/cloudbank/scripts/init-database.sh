@@ -44,7 +44,10 @@ cd $CB_ROOT_DIR/sql
 #  echo "@BankBUser.sql"
 #} | sql /nolog 2>&1 | tee -a $CB_STATE_DIR/logs/$CURRENT_TIME-sql-setup.log
 
+# For ADB
 # Without TLS enabled and with wallet
+if [[ $DBKIND == ADB ]]; then
+
 {
   echo "set cloudconfig $location"
   echo "conn admin/$password@$CONNSERVICE"
@@ -55,7 +58,26 @@ cd $CB_ROOT_DIR/sql
   echo "@BankAUser.sql"
   echo "conn bankbuser/$password@$CONNSERVICE"
   echo "@BankBUser.sql"
-} | sql /nolog 2>&1 | tee -a $CB_STATE_DIR/logs/$CURRENT_TIME-sql-setup.log
+} | sql /nolog > $CB_STATE_DIR/logs/$CURRENT_TIME-sql-setup.log
+
+elif [[ $DBKIND == SIDB ]]; then
+
+{
+  echo "alter session set container=xepdb1"
+  echo "connect system/$password@$CONNSERVICE"
+  echo "@SystemCreateAdmin.sql"
+  echo "connect admin/$password@$CONNSERVICE"
+  echo "@AdminCreateUsers.sql"
+  echo "conn aquser/$password@$CONNSERVICE"
+  echo "@AQUserCreateQueues.sql"
+  echo "conn bankauser/$password@$CONNSERVICE"
+  echo "@BankAUser.sql"
+  echo "conn bankbuser/$password@$CONNSERVICE"
+  echo "@BankBUser.sql"
+} | kubectl exec -it $(kubectl get pods | grep 'cloudbankdb') -- sqlplus / as sysdba > $CB_STATE_DIR/logs/$CURRENT_TIME-sql-setup.log
+
+
+fi
 
 # completed
 cd $LAB_HOME
