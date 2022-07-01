@@ -1,11 +1,5 @@
+# For Application objects
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: cloudbank-app
-
----
-
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: cloudbank-db
+  name: cloudbank
