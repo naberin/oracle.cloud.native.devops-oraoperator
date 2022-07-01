@@ -41,7 +41,7 @@ echo 'DONE'
 
 
 # Set source env inside bashrc
-echo -n 'Saving lab settings...'
+echo -n 'Saving Lab settings...'
 $CB_ROOT_DIR/save_source.sh
 echo 'DONE'
 
