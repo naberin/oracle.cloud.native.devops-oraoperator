@@ -25,3 +25,12 @@ done;
 
 # Run Container
 docker-compose -f /home/opc/agent.yaml up -d
+
+# Create directory for wallet
+mkdir /var/lib/wallet
+
+# add user to group
+sudo usermod -a -G jenkins jenkins
+
+# change permissions
+sudo chmod g+r /va/lib/wallet

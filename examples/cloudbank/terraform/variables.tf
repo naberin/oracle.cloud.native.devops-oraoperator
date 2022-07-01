@@ -7,6 +7,11 @@ variable tenancy_ocid {
 variable compartment_ocid {
   description = "OCID of compartment to provision resources in"
 }
+variable jenkins_password {
+  description = "Jenkins instance credentials"
+  sensitive = true
+  type = string
+}
 variable availability_domain_name {
   description = "Availability Domain to provision the compute instance in"
   default = null

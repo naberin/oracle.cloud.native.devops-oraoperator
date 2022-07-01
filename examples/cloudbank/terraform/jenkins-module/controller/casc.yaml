@@ -12,7 +12,7 @@ jenkins:
 tool:
   maven:
     installations:
-      - name: m3
+      - name: M3
         properties:
           - installSource:
               installers:
