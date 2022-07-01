@@ -33,7 +33,7 @@
     "lab": {
         "fixed_demo_user_credential": "Welcome12345",
         "state_directory": "cbworkshop",
-        "docker_registry": "phx.ocir.io/tenancy_namespace"
+        "docker_registry": "<region_key>.ocir.io/<tenancy_namespace>"
     },
     "state": {}
 }

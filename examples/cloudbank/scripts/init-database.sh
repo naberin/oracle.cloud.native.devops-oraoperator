@@ -33,7 +33,7 @@ touch $CB_STATE_DIR/logs/$CURRENT_TIME-sql-setup.log
 cd $CB_ROOT_DIR/sql
 
 # With TLS enabled and without wallet
-#{
+# {
 #  echo "conn admin/$password@$CONNSTRING"
 #  echo "@AdminCreateUsers.sql"
 #  echo "conn aquser/$password@$CONNSTRING"

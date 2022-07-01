@@ -33,15 +33,15 @@ read -p "Enter the compartment OCID to provision resources in: " OCID
 state_set '.lab.ocid.compartment |= $VAL' $OCID
 
 # requires tenancy OCID
-read -p "Enter the tenancy OCID to provision resources in: " tOCID
+read -p "Enter the tenancy OCID to authenticate provisioning with: " tOCID
 state_set '.lab.ocid.tenancy |= $VAL' $tOCID
 
 # requires user OCID
-read -p "Enter the user OCID to provision resources in: " uOCID
+read -p "Enter the user OCID to authenticate provisioning with: " uOCID
 state_set '.lab.ocid.user |= $VAL' $uOCID
 
 # requires Fingerprint
-read -p "Enter user fingerprint to provision resources in: " fPRINTVAL
+read -p "Enter user fingerprint to authenticate provisioning with: " fPRINTVAL
 state_set '.lab.apikey.fingerprint |= $VAL' $fPRINTVAL
 
 # requires OCIR registry
@@ -50,6 +50,7 @@ read -p "Enter the OCI Registry to use: [$LAB] " OCID
 state_set '.lab.docker_registry |= $VAL' $OCID
 
 # requires Jenkins password
-read -p "Enter the Jenkins credentials to use: " JPWD
+read -s -r -p "Enter the Jenkins credentials to use: " JPWD
 state_set '.lab.pwd.jenkins |= $VAL' $JPWD
+echo "SET"
 
