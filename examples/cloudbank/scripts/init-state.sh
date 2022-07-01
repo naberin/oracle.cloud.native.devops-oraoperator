@@ -8,7 +8,8 @@
 # - Compartment OCID
 # - Tenancy OCID
 # - Fingerprint
-# - Setup Config
+# - OCI Registry
+# - Jenkins Password
 STATE_LOCATION=$CB_STATE_DIR/state.json
 
 
@@ -47,3 +48,8 @@ state_set '.lab.apikey.fingerprint |= $VAL' $fPRINTVAL
 LAB="$(jq -r .lab.docker_registry $STATE_LOCATION )"
 read -p "Enter the OCI Registry to use: [$LAB] " OCID
 state_set '.lab.docker_registry |= $VAL' $OCID
+
+# requires Jenkins password
+read -p "Enter the Jenkins credentials to use: " JPWD
+state_set '.lab.pwd.jenkins |= $VAL' $JPWD
+
