@@ -1,78 +1,57 @@
 data template_file jenkins_docker_compose {
-  template = file("${path.module}/controller/jenkins.yaml")
+  template = file("${path.module}/scripts/jenkins.yaml")
 
   vars = {
+    public_key_openssh = tls_private_key.tls_key_pair.public_key_openssh,
     jenkins_user       = var.jenkins_user,
     jenkins_password   = var.jenkins_password
   }
 }
 
-data template_file agent_setup {
-  depends_on = [oci_core_instance.jenkins_vm]
-  for_each = toset(var.unique_agent_names)
-  template = file("${path.module}/agent/setup.sh")
-
-  vars = {
-    jenkins_endpoint       = "http://${oci_core_instance.jenkins_vm.private_ip}",
-    jenkins_user           = var.jenkins_user
-    jenkins_password       = var.jenkins_password
-    jenkins_agent_name     = each.value
-  }
-}
-
 resource null_resource jenkins_provisioner {
-  depends_on = [oci_core_instance.jenkins_vm, oci_bastion_session.bastion_session]
+  depends_on = [oci_core_instance.jenkins_vm, oci_core_public_ip.jenkins_public_ip]
 
   provisioner file {
     content     = data.template_file.jenkins_docker_compose.rendered
     destination = "/home/opc/jenkins.yaml"
 
     connection {
-      host        = oci_core_instance.jenkins_vm.private_ip
+      type        = "ssh"
+      host        = oci_core_public_ip.jenkins_public_ip.ip_address
       agent       = false
       timeout     = "5m"
       user        = "opc"
       private_key = tls_private_key.tls_key_pair.private_key_pem
 
-      bastion_host        = "host.bastion.${var.region}.oci.oraclecloud.com"
-      bastion_user        = oci_bastion_session.bastion_session.id
-      bastion_private_key = tls_private_key.tls_key_pair.private_key_pem
     }
   }
 
   provisioner file {
-    content     = file("${path.module}/controller/Dockerfile")
+    content     = file("${path.module}/scripts/Dockerfile")
     destination = "/home/opc/Dockerfile"
 
     connection {
-      host        = oci_core_instance.jenkins_vm.private_ip
+      type        = "ssh"
+      host        = oci_core_public_ip.jenkins_public_ip.ip_address
       agent       = false
       timeout     = "5m"
       user        = "opc"
       private_key = tls_private_key.tls_key_pair.private_key_pem
-
-      bastion_host        = "host.bastion.${var.region}.oci.oraclecloud.com"
-      bastion_user        = oci_bastion_session.bastion_session.id
-      bastion_private_key = tls_private_key.tls_key_pair.private_key_pem
 
     }
   }
 
   provisioner file {
-    content     = file("${path.module}/controller/casc.yaml")
+    content     = file("${path.module}/scripts/casc.yaml")
     destination = "/home/opc/casc.yaml"
 
     connection {
-      host        = oci_core_instance.jenkins_vm.private_ip
+      type        = "ssh"
+      host        = oci_core_public_ip.jenkins_public_ip.ip_address
       agent       = false
       timeout     = "5m"
       user        = "opc"
       private_key = tls_private_key.tls_key_pair.private_key_pem
-
-
-      bastion_host        = "host.bastion.${var.region}.oci.oraclecloud.com"
-      bastion_user        = oci_bastion_session.bastion_session.id
-      bastion_private_key = tls_private_key.tls_key_pair.private_key_pem
 
     }
 
@@ -80,15 +59,13 @@ resource null_resource jenkins_provisioner {
 
   provisioner remote-exec {
     connection {
-      host        = oci_core_instance.jenkins_vm.private_ip
+      type        = "ssh"
+      host        = oci_core_public_ip.jenkins_public_ip.ip_address
       agent       = false
       timeout     = "5m"
       user        = "opc"
       private_key = tls_private_key.tls_key_pair.private_key_pem
 
-      bastion_host        = "host.bastion.${var.region}.oci.oraclecloud.com"
-      bastion_user        = oci_bastion_session.bastion_session.id
-      bastion_private_key = tls_private_key.tls_key_pair.private_key_pem
     }
 
     inline = [
@@ -99,110 +76,4 @@ resource null_resource jenkins_provisioner {
   }
 }
 
-
-resource null_resource agents_provisioner {
-  depends_on = [
-    oci_bastion_session.bastion_agent_session,
-    oci_core_instance.agent_vm,
-    null_resource.jenkins_provisioner
-  ]
-  for_each = toset(var.unique_agent_names)
-
-  provisioner file {
-
-    content     = file("${path.module}/agent/agent.yaml")
-    destination = "/home/opc/agent.yaml"
-
-    connection {
-      host        = oci_core_instance.agent_vm[each.key].private_ip
-      agent       = false
-      timeout     = "5m"
-      user        = "opc"
-      private_key = tls_private_key.tls_key_pair.private_key_pem
-
-      bastion_host        = "host.bastion.${var.region}.oci.oraclecloud.com"
-      bastion_user        = oci_bastion_session.bastion_agent_session[each.key].id
-      bastion_private_key = tls_private_key.tls_key_pair.private_key_pem
-    }
-  }
-
-  provisioner file {
-    content     = file("${path.module}/agent/Dockerfile")
-    destination = "/home/opc/Dockerfile"
-
-    connection {
-      host        = oci_core_instance.agent_vm[each.key].private_ip
-      agent       = false
-      timeout     = "5m"
-      user        = "opc"
-      private_key = tls_private_key.tls_key_pair.private_key_pem
-
-      bastion_host        = "host.bastion.${var.region}.oci.oraclecloud.com"
-      bastion_user        = oci_bastion_session.bastion_agent_session[each.key].id
-      bastion_private_key = tls_private_key.tls_key_pair.private_key_pem
-
-    }
-  }
-
-  provisioner file {
-    content     = file("${path.module}/agent/config.xml")
-    destination = "/home/opc/config.xml"
-
-    connection {
-      host        = oci_core_instance.agent_vm[each.key].private_ip
-      agent       = false
-      timeout     = "5m"
-      user        = "opc"
-      private_key = tls_private_key.tls_key_pair.private_key_pem
-
-
-      bastion_host        = "host.bastion.${var.region}.oci.oraclecloud.com"
-      bastion_user        = oci_bastion_session.bastion_agent_session[each.key].id
-      bastion_private_key = tls_private_key.tls_key_pair.private_key_pem
-
-    }
-
-  }
-
-  provisioner file {
-    content     = data.template_file.agent_setup[each.key].rendered
-    destination = "/home/opc/setup.sh"
-
-    connection {
-      host        = oci_core_instance.agent_vm[each.key].private_ip
-      agent       = false
-      timeout     = "5m"
-      user        = "opc"
-      private_key = tls_private_key.tls_key_pair.private_key_pem
-
-
-      bastion_host        = "host.bastion.${var.region}.oci.oraclecloud.com"
-      bastion_user        = oci_bastion_session.bastion_agent_session[each.key].id
-      bastion_private_key = tls_private_key.tls_key_pair.private_key_pem
-
-    }
-
-  }
-
-  provisioner remote-exec {
-
-    connection {
-      host        = oci_core_instance.agent_vm[each.key].private_ip
-      agent       = false
-      timeout     = "5m"
-      user        = "opc"
-      private_key = tls_private_key.tls_key_pair.private_key_pem
-
-      bastion_host        = "host.bastion.${var.region}.oci.oraclecloud.com"
-      bastion_user        = oci_bastion_session.bastion_agent_session[each.key].id
-      bastion_private_key = tls_private_key.tls_key_pair.private_key_pem
-    }
-
-    inline = [
-      "chmod +x /home/opc/setup.sh",
-      "sh /home/opc/setup.sh"
-    ]
-
-  }
-}
 
