@@ -1,10 +1,8 @@
----
-
 apiVersion: database.oracle.com/v1alpha1
 kind: SingleInstanceDatabase
 metadata:
   name: cloudbankdb
-  namespace: default
+  namespace: cloudbank-db
 spec:
 
   ## DB edition
@@ -12,7 +10,7 @@ spec:
 
   ## Secret containing SIDB password mapped to secretKey
   adminPassword:
-    secretName: prebuiltdb-admin-secret
+    secretName: sidb-admin-secret
 
   ## Database Image
   image:

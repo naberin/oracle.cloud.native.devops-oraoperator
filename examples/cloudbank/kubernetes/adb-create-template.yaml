@@ -2,6 +2,7 @@ apiVersion: database.oracle.com/v1alpha1
 kind: AutonomousDatabase
 metadata:
   name: cloudbankdb
+  namespace: cloudbank-app
 spec:
   details:
     compartmentOCID: %ADB_COMPARTMENT%
