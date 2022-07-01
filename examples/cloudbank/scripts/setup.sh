@@ -61,3 +61,27 @@ $CB_STATE_DIR/init-state.sh
 echo 'The lab requires more information...'
 $CB_STATE_DIR/init-infrastructure.sh
 echo ''
+
+
+# Check which database kind will the user go with for the lab
+echo 'Database Options'
+PS3='Please select the type of Database to deploy: '
+options=("Oracle Autonomous Database (ADB)" "Oracle Single Instance Database (SIDB)")
+select opt in "${options[@]}"
+do
+    case $opt in
+        "Oracle Autonomous Database (ADB)")
+                CONFIGURATION='ADB'
+                echo "You have selected Oracle Autonomous Database (ADB)"
+                break
+                ;;
+        "Oracle Single Instance Database (SIDB)")
+                    CONFIGURATION='SIDB'
+                    echo "You have selected Oracle Single Instance Database (SIDB)"
+                    break
+                    ;;
+        *) echo "invalid option $REPLY";;
+    esac
+done
+state_set '.lab.database.selected |= $VAL' $CONFIGURATION
+echo ""
