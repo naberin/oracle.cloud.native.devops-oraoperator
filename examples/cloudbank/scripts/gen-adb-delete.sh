@@ -6,18 +6,14 @@ STATE_LOCATION=$CB_STATE_DIR/state.json
 
 # requires Autonomous Database OCID
 echo -n "Retreiving Autonomous Database OCID..."
-ADBOCID="$(state_get .lab.ocid.adb)"
-if [[ $ADBOCID == null ]]; then
-
-  OCID=$(kubectl get AutonomousDatabase/cloudbankdb -o jsonpath='{.spec.details.autonomousDatabaseOCID}')
-  if [ -z $OCID ]; then
-    echo "Error: AutonomousDatabase OCID could not be retrieved."
-    echo ""
-    exit 1;
-  fi
-  state_set '.lab.ocid.adb |= $VAL' $OCID
-  echo "DONE"
+OCID=$(kubectl get AutonomousDatabase/cloudbankdb -o jsonpath='{.spec.details.autonomousDatabaseOCID}')
+if [ -z $OCID ]; then
+  echo "Error: AutonomousDatabase OCID could not be retrieved."
+  echo ""
+  exit 1;
 fi
+state_set '.lab.ocid.adb |= $VAL' $OCID
+echo "DONE"
 echo ""
 
 
@@ -32,7 +28,7 @@ cp $CB_KUBERNETES_TEMPLATES_DIR/adb-delete-template.yaml $YAML_FILE
 echo "DONE"
 
 
-# Replacing Compartment OCID
+# Replacing ADB OCID
 echo -n "Updating generated YAML file..."
 sed -e  "s|%ADB_OCID%|$ADB_OCID|g" $YAML_FILE > /tmp/adb-delete.yaml
 mv -- /tmp/adb-delete.yaml $YAML_FILE

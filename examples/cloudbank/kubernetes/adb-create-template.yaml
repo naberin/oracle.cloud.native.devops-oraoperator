@@ -13,7 +13,6 @@ spec:
         name: admin-password
 
     dataStorageSizeInTBs: 1
-  hardLink: true
   ociConfig:
     configMapName: oci-cred
     secretName: oci-privatekey

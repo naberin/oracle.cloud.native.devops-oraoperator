@@ -4,7 +4,7 @@ metadata:
   name: cloudbankdb
 spec:
   details:
-    compartmentOCID: %ADB_OCID%
+    autonomousDatabaseOCID: %ADB_OCID%
   hardLink: true
   ociConfig:
     configMapName: oci-cred
