@@ -52,7 +52,7 @@ if [[ $DBKIND == ADB ]]; then
 elif [[ $DBKIND == SIDB ]]; then
 {
   echo "alter session set container=XEPDB1;"
-  echo "connect system/$password@$CONNSERVICE"
+  echo "connect sys/$password@$CONNSERVICE as sysdba"
   cat AdminCreateUsers-SIDBXE.sql
   echo "conn aquser/$password@$CONNSERVICE"
   cat AQUserCreateQueues.sql
