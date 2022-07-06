@@ -19,9 +19,6 @@ CONNSERVICE=XEPDB1
 
 fi
 
-# For SIDB
-
-
 # For ADB
 # Retrieve Password
 password=$(state_get .lab.fixed_demo_user_credential)
@@ -56,7 +53,7 @@ elif [[ $DBKIND == SIDB ]]; then
 {
   echo "alter session set container=XEPDB1;"
   echo "connect system/$password@$CONNSERVICE"
-  cat AdminCreateUsers.sql
+  cat AdminCreateUsers-SIDBXE.sql
   echo "conn aquser/$password@$CONNSERVICE"
   cat AQUserCreateQueues.sql
   echo "conn bankauser/$password@$CONNSERVICE"
@@ -64,7 +61,6 @@ elif [[ $DBKIND == SIDB ]]; then
   echo "conn bankbuser/$password@$CONNSERVICE"
   cat BankBUser.sql
 } | kubectl exec -i $(kubectl get pods | grep 'cloudbankdb') -- sqlplus / as sysdba > $CB_STATE_DIR/logs/$CURRENT_TIME-sql-setup.log
-
 
 fi
 
