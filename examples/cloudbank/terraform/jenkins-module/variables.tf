@@ -1,6 +1,19 @@
+# Optional, but important, if empty, will provision a new Internet Gateway, will reuse the gateway below otherwise
+variable preprovisioned_igw_id {
+  description = "OCID of preprovisioned Internet Gateway"
+  default = ""
+}
+
+# Optional, but important, if empty, will create 2 VCNs (For OKE and Jenkins)
+variable preprovisioned_vcn_id {
+  description = "OCID of preprovisioned VCN"
+  default = ""
+}
+# Required
 variable region {
   description = "Tenancy region to provision resources in"
 }
+# Required
 variable compartment_id {
   description = "OCID of compartment to provision resources in"
 }
@@ -36,7 +49,7 @@ variable jenkins_user {
   type = string
   default     = "admin"
 }
-
+# Required
 variable jenkins_password {
   description = "Password for Jenkins admin user"
   type = string

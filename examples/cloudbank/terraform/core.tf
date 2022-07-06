@@ -2,7 +2,7 @@ resource oci_core_internet_gateway igw {
   compartment_id = var.compartment_ocid
   display_name = "cloudbank-igw-cloudbank"
   enabled      = "true"
-  vcn_id = oci_core_vcn.cloudbank_vcn.id
+  vcn_id = data.oci_core_vcn.vcn.id
 }
 
 resource oci_core_service_gateway sgw {
@@ -11,13 +11,13 @@ resource oci_core_service_gateway sgw {
   services {
     service_id = data.oci_core_services.services.services.0.id
   }
-  vcn_id = oci_core_vcn.cloudbank_vcn.id
+  vcn_id = data.oci_core_vcn.vcn.id
 }
 
 resource oci_core_subnet regional_node_subnet {
   cidr_block     = "10.0.10.0/24"
   compartment_id = var.compartment_ocid
-  dhcp_options_id = oci_core_vcn.cloudbank_vcn.default_dhcp_options_id
+  dhcp_options_id =  data.oci_core_vcn.vcn.default_dhcp_options_id
   display_name    = "cloudbank-regional-node-subnet"
   dns_label       = "cbnodesubnet"
 
@@ -27,7 +27,7 @@ resource oci_core_subnet regional_node_subnet {
   security_list_ids = [
     oci_core_security_list.node_security_list.id,
   ]
-  vcn_id = oci_core_vcn.cloudbank_vcn.id
+  vcn_id = data.oci_core_vcn.vcn.id
 }
 
 resource oci_core_subnet regional_apiendpoint_subnet {
@@ -35,7 +35,7 @@ resource oci_core_subnet regional_apiendpoint_subnet {
   compartment_id = var.compartment_ocid
   defined_tags = {
   }
-  dhcp_options_id = oci_core_vcn.cloudbank_vcn.default_dhcp_options_id
+  dhcp_options_id = data.oci_core_vcn.vcn.default_dhcp_options_id
   display_name    = "cloudbank-regional-api-endpoint-subnet"
   dns_label       = "cbapisubnet"
   freeform_tags = {
@@ -44,18 +44,18 @@ resource oci_core_subnet regional_apiendpoint_subnet {
   ]
   prohibit_internet_ingress  = "false"
   prohibit_public_ip_on_vnic = "false"
-  route_table_id             = oci_core_vcn.cloudbank_vcn.default_route_table_id
+  route_table_id             = data.oci_core_vcn.vcn.default_route_table_id
   security_list_ids = [
     oci_core_security_list.cloudbank-oke-k8sApiEndpoint.id,
   ]
-  vcn_id = oci_core_vcn.cloudbank_vcn.id
+  vcn_id = data.oci_core_vcn.vcn.id
 }
 
 resource oci_core_subnet regional_svclb_subnet {
   cidr_block     = "10.0.20.0/24"
   compartment_id = var.compartment_ocid
 
-  dhcp_options_id = oci_core_vcn.cloudbank_vcn.default_dhcp_options_id
+  dhcp_options_id = data.oci_core_vcn.vcn.default_dhcp_options_id
   display_name    = "cloudbank-regional-svclb-subnet"
   dns_label       = "cbsvclbsubnet"
 
@@ -63,11 +63,11 @@ resource oci_core_subnet regional_svclb_subnet {
   ]
   prohibit_internet_ingress  = "false"
   prohibit_public_ip_on_vnic = "false"
-  route_table_id             = oci_core_vcn.cloudbank_vcn.default_route_table_id
+  route_table_id             = data.oci_core_vcn.vcn.default_route_table_id
   security_list_ids = [
-    oci_core_vcn.cloudbank_vcn.default_security_list_id,
+    data.oci_core_vcn.vcn.default_security_list_id,
   ]
-  vcn_id = oci_core_vcn.cloudbank_vcn.id
+  vcn_id = data.oci_core_vcn.vcn.id
 }
 
 resource oci_core_vcn cloudbank_vcn {
@@ -80,13 +80,17 @@ resource oci_core_vcn cloudbank_vcn {
 
   ipv6private_cidr_blocks = [
   ]
+
+  # if there exists a preprovisioned_vcn, provision nothing
+  # otherwise, provision cloudbank_vcn
+  count = var.preprovisioned_vcn_id != "" ? 0 : 1
 }
 
 resource oci_core_default_dhcp_options default_dhcp_options {
   compartment_id = var.compartment_ocid
   display_name     = "cloudbank-vcn-default-dhcp"
   domain_name_type = "CUSTOM_DOMAIN"
-  manage_default_resource_id = oci_core_vcn.cloudbank_vcn.default_dhcp_options_id
+  manage_default_resource_id = data.oci_core_vcn.vcn.default_dhcp_options_id
   options {
     custom_dns_servers = [
     ]
@@ -106,7 +110,7 @@ resource oci_core_nat_gateway oke-ngw {
   compartment_id = var.compartment_ocid
 
   display_name = "cloudbank-ngw"
-  vcn_id       = oci_core_vcn.cloudbank_vcn.id
+  vcn_id       = data.oci_core_vcn.vcn.id
 }
 
 resource oci_core_route_table oke-private-rt {
@@ -125,7 +129,7 @@ resource oci_core_route_table oke-private-rt {
     destination_type  = "SERVICE_CIDR_BLOCK"
     network_entity_id = oci_core_service_gateway.sgw.id
   }
-  vcn_id = oci_core_vcn.cloudbank_vcn.id
+  vcn_id = data.oci_core_vcn.vcn.id
 }
 
 resource oci_core_default_route_table export_oke-public-routetable {
@@ -135,7 +139,7 @@ resource oci_core_default_route_table export_oke-public-routetable {
   display_name = "cloudbank-public-rt"
   freeform_tags = {
   }
-  manage_default_resource_id = oci_core_vcn.cloudbank_vcn.default_route_table_id
+  manage_default_resource_id = data.oci_core_vcn.vcn.default_route_table_id
   route_rules {
     description       = "traffic to/from internet"
     destination       = "0.0.0.0/0"
@@ -224,7 +228,7 @@ resource oci_core_security_list cloudbank-oke-k8sApiEndpoint {
     source_type = "CIDR_BLOCK"
     stateless   = "false"
   }
-  vcn_id = oci_core_vcn.cloudbank_vcn.id
+  vcn_id = data.oci_core_vcn.vcn.id
 }
 
 resource oci_core_security_list node_security_list {
@@ -339,13 +343,13 @@ resource oci_core_security_list node_security_list {
       min = "22"
     }
   }
-  vcn_id = oci_core_vcn.cloudbank_vcn.id
+  vcn_id = data.oci_core_vcn.vcn.id
 }
 
 resource oci_core_default_security_list export_oke-svclbseclist {
   compartment_id = var.compartment_ocid
   display_name = "cloudbank-oke-svclb"
 
-  manage_default_resource_id = oci_core_vcn.cloudbank_vcn.default_security_list_id
+  manage_default_resource_id = data.oci_core_vcn.vcn.default_security_list_id
 }
 

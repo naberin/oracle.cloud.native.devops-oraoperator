@@ -31,7 +31,7 @@ resource oci_containerengine_cluster cloudbank {
       oci_core_subnet.regional_svclb_subnet.id,
     ]
   }
-  vcn_id = oci_core_vcn.cloudbank_vcn.id
+  vcn_id = data.oci_core_vcn.vcn.id
 }
 
 

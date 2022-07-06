@@ -28,3 +28,8 @@ data oci_core_vnic jenkins_vnic {
 data oci_core_private_ips jenkins_private_ip {
   vnic_id = data.oci_core_vnic.jenkins_vnic.id
 }
+
+data oci_core_vcn vcn {
+  # if there exists a preprovisioned VCN, use that VCN, otherwise, use jenkins_vcn
+  vcn_id = var.preprovisioned_vcn_id != "" ? var.preprovisioned_vcn_id : oci_core_vcn.jenkins_vcn[0].id
+}
