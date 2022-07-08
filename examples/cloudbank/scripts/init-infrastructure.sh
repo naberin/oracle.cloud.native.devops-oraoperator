@@ -12,9 +12,9 @@ echo -n 'Creating cloud infrastructure resources...'
 cd $CB_TERRAFORM_DIR
 
 touch $CB_STATE_DIR/logs/$CURRENT_TIME-terraform-init.log
-terraform init 2>&1 | tee -a $CB_STATE_DIR/logs/$CURRENT_TIME-terraform-init.log
+terraform init > $CB_STATE_DIR/logs/$CURRENT_TIME-terraform-init.log
 
 touch $CB_STATE_DIR/logs/$CURRENT_TIME-terraform-apply.log
-terraform apply --auto-approve 2>&1 | tee -a $CB_STATE_DIR/logs/$CURRENT_TIME-terraform-apply.log
+terraform apply --auto-approve > $CB_STATE_DIR/logs/$CURRENT_TIME-terraform-apply.log
 
 cd $LAB_HOME
