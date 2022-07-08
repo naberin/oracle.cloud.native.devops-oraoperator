@@ -18,12 +18,21 @@ DB_NAME=$(state_get .app.backend.pdb_name)
 echo -n create banka deployment and service...
 export CURRENTTIME=generated
 
+# determine database type
+# and how to connect
+DBKIND=$(state_get .lab.database.selected)
+
 # resource locations
 BANKA_DEPLOYMENT=$CB_STATE_DIR/generated/banka-deployment-$CURRENTTIME.yaml
 BANKA_SERVICE=$CB_STATE_DIR/generated/banka-service.yaml
 
 # generate resource files
-cp $CB_ROOT_DIR/backend-springboot/bank-deployment.yaml $BANKA_DEPLOYMENT
+if [[ $DBKIND == SIDB ]]; then
+  cp $CB_ROOT_DIR/backend-springboot/bank-deployment-sidb.yaml $BANKA_DEPLOYMENT
+elif [[ $DBKIND == ADB ]]; then
+  cp $CB_ROOT_DIR/backend-springboot/bank-deployment.yaml $BANKA_DEPLOYMENT
+fi
+
 cp $CB_ROOT_DIR/backend-springboot/banka-service.yaml $BANKA_SERVICE
 
 # update resource files
@@ -31,10 +40,18 @@ sed -e  "s|%BACKEND_IMAGE%|${BACKEND_IMAGE}|g" $BANKA_DEPLOYMENT > /tmp/bank-dep
 mv -- /tmp/bank-deployment-$CURRENTTIME.yaml $BANKA_DEPLOYMENT
 sed -e  "s|%BANK_NAME%|${BANK_NAME}|g" $BANKA_DEPLOYMENT > /tmp/bank-deployment-$CURRENTTIME.yaml
 mv -- /tmp/bank-deployment-$CURRENTTIME.yaml $BANKA_DEPLOYMENT
-sed -e  "s|%db-wallet-secret%|${DB_WALLET_SECRET}|g" $BANKA_DEPLOYMENT > /tmp/bank-deployment-$CURRENTTIME.yaml
-mv -- /tmp/bank-deployment-$CURRENTTIME.yaml $BANKA_DEPLOYMENT
-sed -e  "s|%PDB_NAME%|${DB_NAME}|g" $BANKA_DEPLOYMENT > /tmp/bank-deployment-$CURRENTTIME.yaml
-mv -- /tmp/bank-deployment-$CURRENTTIME.yaml $BANKA_DEPLOYMENT
+
+if [[ $DBKIND == SIDB ]]; then
+  CONNECTIONSTRING=$(kubectl get singleinstancedatabase cloudbankdb -o "jsonpath={.status.pdbConnectString}")
+  sed -e  "s|%CONNECTIONSTRING%|${CONNECTIONSTRING}|g" $BANKA_DEPLOYMENT > /tmp/bank-deployment-$CURRENTTIME.yaml
+  mv -- /tmp/bank-deployment-$CURRENTTIME.yaml $BANKA_DEPLOYMENT
+elif [[ $DBKIND == ADB ]]; then
+  sed -e  "s|%db-wallet-secret%|${DB_WALLET_SECRET}|g" $BANKA_DEPLOYMENT > /tmp/bank-deployment-$CURRENTTIME.yaml
+  mv -- /tmp/bank-deployment-$CURRENTTIME.yaml $BANKA_DEPLOYMENT
+  sed -e  "s|%PDB_NAME%|${DB_NAME}|g" $BANKA_DEPLOYMENT > /tmp/bank-deployment-$CURRENTTIME.yaml
+  mv -- /tmp/bank-deployment-$CURRENTTIME.yaml $BANKA_DEPLOYMENT
+fi
+
 sed -e  "s|%USER%|bankauser|g" $BANKA_DEPLOYMENT > /tmp/bank-deployment-$CURRENTTIME.yaml
 mv -- /tmp/bank-deployment-$CURRENTTIME.yaml $BANKA_DEPLOYMENT
 
