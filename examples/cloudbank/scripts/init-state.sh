@@ -29,8 +29,13 @@ read -p "Enter the region to use (e.g. us-phoenix-1): " INP
 state_set '.lab.region.identifier |= $VAL' $INP
 
 # requires Reqion Key
-read -p "Enter the region-key to use (e.g. us-phoenix-1): " INP
-state_set '.lab.region.key |= $VAL' $INP
+read -p "Enter the region-key to use (e.g. us-phoenix-1): " RKEY
+state_set '.lab.region.key |= $VAL' RKEY
+
+# requires OCIR registry
+namespace=$(oci os ns get | jq -r .data)
+OCIR="${RKEY}.ocir.io/${namespace}/cloudbank"
+state_set '.lab.docker_registry |= $VAL' $OCIR
 
 # requires compartment OCID
 read -p "Enter the compartment OCID to provision resources in: " OCID
@@ -48,11 +53,6 @@ state_set '.lab.ocid.user |= $VAL' $uOCID
 read -p "Enter user fingerprint to authenticate provisioning with: " fPRINTVAL
 state_set '.lab.apikey.fingerprint |= $VAL' $fPRINTVAL
 
-# requires OCIR registry
-LAB="$(jq -r .lab.docker_registry $STATE_LOCATION )"
-read -p "Enter the OCI Registry to use: [$LAB] " OCID
-state_set '.lab.docker_registry |= $VAL' $OCID
-
 # requires Jenkins password
 read -s -r -p "Enter the Jenkins credentials to use: " JPWD
 state_set '.lab.pwd.jenkins |= $VAL' $JPWD
@@ -60,7 +60,8 @@ echo "SET"
 
 
 # Check which database kind will the user go with for the lab
-echo 'Database Options'
+echo ""
+echo 'Available Database Options for the Lab'
 PS3='Please select the type of Database you plan to use (1 or 2): '
 options=("Option 1: Oracle Autonomous Database (ADB)" "Option 2: Oracle Single Instance Database (SIDB)")
 select opt in "${options[@]}"
