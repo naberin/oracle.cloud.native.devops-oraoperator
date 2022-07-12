@@ -27,23 +27,14 @@ if kubectl version >> $CB_STATE_DIR/logs/$CURRENT_TIME-kubectl-version.log; then
 fi
 
 # teardown infrastructure resources
-cd $CB_TERRAFORM_DIR
 
-# set terraform vars
-source terraform.env
 
-# init
-if ! terraform init; then
-    echo 'ERROR: terraform init failed!'
-    exit 1
-fi
+# Generate Terraform Vars file
+./tasks/terraform-env.sh
 
-# destroy
-touch $CB_STATE_DIR/logs/$CURRENT_TIME-terraform-destroy.log
-if ! terraform destroy --auto-approve 2>&1 | tee $CB_STATE_DIR/logs/$CURRENT_TIME-terraform-destroy.log; then
-    echo 'ERROR: terraform destroy failed!'
-    exit 1
-fi
+# Run terraform
+./tasks/terraform-create.sh
+
 
 # return
 cd $LAB_HOME
