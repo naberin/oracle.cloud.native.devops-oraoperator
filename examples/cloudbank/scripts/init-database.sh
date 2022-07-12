@@ -2,6 +2,9 @@
 CURRENT_TIME=$( date '+%F_%H:%M:%S' )
 
 
+# mark start
+state_set '.state.dbsetup|= $VAL' STARTED
+
 # Check which database kind will be provisioned
 DBKIND=$(state_get .lab.database.selected)
 echo -n "Initializing $DBKIND..."
@@ -67,3 +70,6 @@ fi
 # completed
 cd $LAB_HOME
 echo "DONE"
+
+# mark completed
+state_set '.state.dbsetup|= $VAL' DONE
