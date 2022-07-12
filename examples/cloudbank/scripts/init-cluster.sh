@@ -7,3 +7,6 @@ NS=$(state_get .namespace)
 kubectl apply -f $CB_KUBERNETES_TEMPLATES_DIR/namespace.yaml
 kubectl config set-context --current --namespace=$NS
 kubectl config view --minify | grep namespace:
+
+# Apply service account
+kubectl apply -f $CB_KUBERNETES_TEMPLATES_DIR/service-account.yaml
