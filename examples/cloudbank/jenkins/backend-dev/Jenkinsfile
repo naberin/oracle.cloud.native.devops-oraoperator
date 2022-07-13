@@ -1,0 +1,71 @@
+pipeline {
+    agent any
+    environment {
+    }
+    stages {
+        stage("details") {
+        // Assumption: Branch names start with CBTRFDEVXXX-SUMMARY
+        // CBTRFDEV is a CloudBank Transfer Microservice Development branch
+        // CBTRFDEVXXX becomes the database name for development
+            steps {
+                echo "************************************************"
+                echo "* ENVIRONMENT"
+                echo "************************************************"
+                sh "printenv"
+                echo ""
+                echo "************************************************"
+                echo "* DEV${GIT_BRANCH.split("-")[0]}"
+                echo "************************************************"
+            }
+        }
+        stage('create-feature-branch') {
+        // Only triggered on create-branch (BUILD_NUMBER == 1)
+            when {
+                allOf {
+                    not { branch 'main' }
+                    not { changeRequest() }
+                    equals expected: 1, actual: env.BUILD_NUMBER
+                }
+            }
+            steps {
+                stages {
+                    stage("generate-yaml-file") {
+                        steps {
+                            sh "source $WORKSPACE/examples/cloudbank/source.env"
+                            dir("$WORKSPACE/examples/cloudbank/scripts") {
+                                sh "gen-sidb-create.sh"
+                            }
+                        }
+                    }
+                    stage("create-database") {
+                        steps {
+                            echo "Creating Single-Instance Database DEV${GIT_BRANCH.split("-")[0]}"
+                        }
+                    }
+                    stage("setup-database") {
+                        steps {
+                            echo "Setting up SIDB DEV${GIT_BRANCH.split("-")[0]}"
+                        }
+                    }
+                }
+            }
+
+        }
+        stage('push-to-branch') {
+        // Only triggered on pushed commits (BUILD_NUMBER > 1)
+            stages {
+
+            }
+
+
+        }
+
+        stage("merge-to-main") {
+            when {
+                changeRequest target: "main"
+            }
+            steps {
+            }
+        }
+    }
+}
