@@ -12,7 +12,7 @@ pipeline {
                 sh "printenv"
                 echo ""
                 echo "************************************************"
-                echo "* DEV${GIT_BRANCH.split("-")[0]}"
+                echo "* ${GIT_BRANCH.split("-")[0]}"
                 echo "************************************************"
             }
         }
@@ -25,8 +25,7 @@ pipeline {
                     equals expected: 1, actual: env.BUILD_NUMBER
                 }
             }
-            steps {
-                stages {
+               stages {
                     stage("generate-yaml-file") {
                         steps {
                             sh "source $WORKSPACE/examples/cloudbank/source.env"
@@ -37,24 +36,26 @@ pipeline {
                     }
                     stage("create-database") {
                         steps {
-                            echo "Creating Single-Instance Database DEV${GIT_BRANCH.split("-")[0]}"
+                            echo "Creating Single-Instance Database ${GIT_BRANCH.split("-")[0]}"
                         }
                     }
                     stage("setup-database") {
                         steps {
                             echo "Setting up SIDB DEV${GIT_BRANCH.split("-")[0]}"
                         }
-                    }
-                }
+               }
             }
 
         }
         stage('push-to-branch') {
         // Only triggered on pushed commits (BUILD_NUMBER > 1)
             stages {
-                steps {
-                    echo "Commit"
+                stage("build-backend") {
+                    steps {
+                        echo "Commit found"
+                    }
                 }
+
             }
 
 
