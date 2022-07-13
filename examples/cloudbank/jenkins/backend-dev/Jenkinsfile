@@ -1,7 +1,5 @@
 pipeline {
     agent any
-    environment {
-    }
     stages {
         stage("details") {
         // Assumption: Branch names start with CBTRFDEVXXX-SUMMARY
@@ -54,7 +52,9 @@ pipeline {
         stage('push-to-branch') {
         // Only triggered on pushed commits (BUILD_NUMBER > 1)
             stages {
-
+                steps {
+                    echo "Commit"
+                }
             }
 
 
@@ -65,6 +65,7 @@ pipeline {
                 changeRequest target: "main"
             }
             steps {
+                echo "Pull Request $BRANCH_NAME"
             }
         }
     }
