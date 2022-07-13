@@ -21,7 +21,6 @@ pipeline {
             when {
                 allOf {
                     not { branch 'main' }
-                    not { changeRequest() }
                     equals expected: 1, actual: env.BUILD_NUMBER
                 }
             }
