@@ -19,9 +19,7 @@ pipeline {
         stage('create-feature-branch') {
         // Only triggered on create-branch (BUILD_NUMBER == 1)
             when {
-                equals expected: 2, actual: env.BUILD_NUMBER
-                not { branch 'main' }
-                not { changeRequest() }
+                equals expected: 3, actual: env.BUILD_NUMBER
             }
                stages {
                     stage("generate-yaml-file") {
