@@ -32,7 +32,8 @@ pipeline {
                         steps {
                             echo "Generating YAML file to generate"
                             dir("$WORKSPACE/examples/cloudbank/jenkins/backend-dev/scripts") {
-                                sh "generate-yaml-file.sh"
+                                sh "ls"
+                                sh "./generate-yaml-file.sh"
                             }
                         }
                     }
