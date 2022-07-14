@@ -25,7 +25,12 @@ pipeline {
         stage('create-feature-branch') {
         // Only triggered on create-branch (BUILD_NUMBER == 1)
             when {
-                equals expected: "11", actual: env.BUILD_NUMBER
+                allOf {
+                    not { changeRequest target: "main" };
+                    not { branch "main" };
+                    equals expected: "1", actual: env.BUILD_NUMBER
+                }
+
             }
                stages {
                     stage("generate-yaml-file") {
@@ -51,6 +56,10 @@ pipeline {
         }
         stage('push-to-branch') {
         // Only triggered on pushed commits (BUILD_NUMBER > 1)
+            when {
+                not { changeRequest target: "main" };
+                not { branch "main" };
+            }
             stages {
                 stage("build-backend") {
                     steps {
