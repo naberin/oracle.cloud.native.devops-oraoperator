@@ -109,7 +109,7 @@ def create_database() {
         credentialsId: kube_cluster_credentials_id,
         namespace: "cloudbank",
         serverUrl: kube_cluster_server_url
-        ]) {
+        ]]) {
             sh "kubectl apply -f sidb-create.yaml"
             sh "kubectl --type=merge -p '{"spec":{"loadBalancer": true}}' patch singleinstancedatabase $DATABASENAME"
         }
