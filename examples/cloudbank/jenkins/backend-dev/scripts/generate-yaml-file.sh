@@ -14,7 +14,7 @@ mkdir -p $run_dir
 # set variables
 src=$kubernetes_dir/sidb-create-template.yaml
 dst=$run_dir/sidb-create.yaml
-name="${GIT_BRANCH.split("-")[0]}"
+name=$1
 ns="cloudbank"
 admin_pwd_secret="sidb-admin-secret"
 

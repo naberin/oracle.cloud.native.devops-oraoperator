@@ -31,10 +31,7 @@ pipeline {
                     stage("generate-yaml-file") {
                         steps {
                             echo "Generating YAML file to generate"
-                            dir("$WORKSPACE/examples/cloudbank/jenkins/backend-dev/scripts") {
-                                sh "ls"
-                                sh "./generate-yaml-file.sh"
-                            }
+                            build_dev()
                         }
                     }
                     stage("create-database") {
@@ -76,6 +73,22 @@ pipeline {
             }
         }
     }
+}
+
+def build_dev() {
+    dir("$WORKSPACE/examples/cloudbank/jenkins/backend-dev/scripts") {
+        withKubeCredentials(kubectlCredentials: [[
+        caCertificate: '',
+        clusterName: "cluster-cwz7kgdbhgq",
+        contextName: '',
+        credentialsId: "kubectl-token",
+        namespace: "kube-system",
+        serverUrl: "https://132.226.124.76:6443"
+        ]]) {
+            sh "./generate-yaml-file.sh $DATABASENAME"
+        }
+    }
+
 }
 
 def setup_database() {
