@@ -25,7 +25,7 @@ pipeline {
         stage('create-feature-branch') {
         // Only triggered on create-branch (BUILD_NUMBER == 1)
             when {
-                equals expected: "5", actual: env.BUILD_NUMBER
+                equals expected: "7", actual: env.BUILD_NUMBER
             }
                stages {
                     stage("generate-yaml-file") {
