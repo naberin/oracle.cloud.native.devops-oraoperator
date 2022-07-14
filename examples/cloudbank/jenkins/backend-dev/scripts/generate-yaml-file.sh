@@ -20,6 +20,3 @@ admin_pwd_secret="sidb-admin-secret"
 
 # run task
 $task/generate-yaml-sidb-create.sh $src $dst $name $ns $admin_pwd_secret
-
-
-kubectl --type=merge -p '{"spec":{"loadBalancer": true}}' patch singleinstancedatabase cloudbankdb
