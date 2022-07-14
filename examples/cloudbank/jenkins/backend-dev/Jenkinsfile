@@ -25,14 +25,15 @@ pipeline {
         stage('create-feature-branch') {
         // Only triggered on create-branch (BUILD_NUMBER == 1)
             when {
-                equals expected: "1", actual: env.BUILD_NUMBER
+                equals expected: "3", actual: env.BUILD_NUMBER
             }
                stages {
                     stage("generate-yaml-file") {
                         steps {
                             echo "Generating YAML file to generate"
                             dir("$WORKSPACE/examples/cloudbank/jenkins/backend-dev/scripts") {
-                                sh "generate-yaml-file.sh"
+                                sh "ls"
+//                                 sh "generate-yaml-file.sh"
                             }
                         }
                     }
