@@ -14,19 +14,21 @@ pipeline {
                 echo "************************************************"
                 echo "* ${GIT_BRANCH.split("-")[0]}"
                 echo "************************************************"
+                sh "ls $WORKSPACE"
+                echo "************************************************"
             }
         }
         stage('create-feature-branch') {
         // Only triggered on create-branch (BUILD_NUMBER == 1)
             when {
-                equals expected: "4", actual: env.BUILD_NUMBER
+                equals expected: "1", actual: env.BUILD_NUMBER
             }
                stages {
                     stage("generate-yaml-file") {
                         steps {
-                            sh "source $WORKSPACE/examples/cloudbank/source.env"
-                            dir("$WORKSPACE/examples/cloudbank/scripts") {
-                                sh "gen-sidb-create.sh"
+                            echo "Generating YAML file to generate"
+                            dir("$WORKSPACE/examples/cloudbank/jenkins/backend-dev/scripts") {
+                                sh "generate-yaml-file.sh"
                             }
                         }
                     }
@@ -49,6 +51,7 @@ pipeline {
                 stage("build-backend") {
                     steps {
                         echo "Commit found"
+                        echo "${env.BUILD_NUMBER}"
                     }
                 }
 
