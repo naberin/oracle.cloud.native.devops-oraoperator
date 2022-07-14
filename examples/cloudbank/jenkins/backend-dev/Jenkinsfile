@@ -32,8 +32,7 @@ pipeline {
                         steps {
                             echo "Generating YAML file to generate"
                             dir("$WORKSPACE/examples/cloudbank/jenkins/backend-dev/scripts") {
-                                sh "ls"
-//                                 sh "generate-yaml-file.sh"
+                                sh "generate-yaml-file.sh"
                             }
                         }
                     }
@@ -85,11 +84,11 @@ def setup_database() {
                 withKubeCredentials(
                     kubectlCredentials: [[
                         caCertificate: '',
-                        clusterName: kube_cluster_name,
+                        clusterName: "cluster-cwz7kgdbhgq",
                         contextName: '',
-                        credentialsId: '',
-                        namespace: "cloudbank",
-                        serverUrl: ""
+                        credentialsId: 'kubectl-token',
+                        namespace: "kube-system",
+                        serverUrl: "https://132.226.124.76:6443"
                     ]]) {
                     def r = sh script: "kubectl get singleinstancedatabase $DATABASENAME -o 'jsonpath={.status.status}'", returnStdout: true
                     return (r == "Healthy")
@@ -105,11 +104,11 @@ def create_database() {
     dir("$WORKSPACE/run") {
         withKubeCredentials(kubectlCredentials: [[
         caCertificate: '',
-        clusterName: kube_cluster_name,
+        clusterName: "cluster-cwz7kgdbhgq",
         contextName: '',
-        credentialsId: kube_cluster_credentials_id,
-        namespace: "cloudbank",
-        serverUrl: kube_cluster_server_url
+        credentialsId: "kubectl-token",
+        namespace: "kube-system",
+        serverUrl: "https://132.226.124.76:6443"
         ]]) {
             sh "kubectl apply -f sidb-create.yaml"
             sh "kubectl --type=merge -p '{"spec":{"loadBalancer": true}}' patch singleinstancedatabase $DATABASENAME"
