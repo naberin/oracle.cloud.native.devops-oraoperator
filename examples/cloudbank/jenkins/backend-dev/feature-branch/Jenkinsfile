@@ -1,69 +1,57 @@
 pipeline {
     agent any
-    environment {
-        DATABASENAME="${GIT_BRANCH.split("-")[0].toLowerCase()}"
-    }
+
     stages {
-        stage("details") {
-        // Assumption: Branch names start with CBTRFDEVXXX-SUMMARY
-        // CBTRFDEV is a CloudBank Transfer Microservice Development branch
-        // CBTRFDEVXXX becomes the database name for development
-            steps {
-                echo "************************************************"
-                echo "* ENVIRONMENT"
-                echo "************************************************"
-                sh "printenv"
-                echo ""
-                echo "************************************************"
-                echo "* $DATABASENAME"
-                echo "************************************************"
-                sh "ls $WORKSPACE"
-                echo "************************************************"
-            }
-        }
         stage('create-feature-branch') {
-        // Only triggered on create-branch (BUILD_NUMBER == 1)
-            when {
-                allOf {
-                    not { changeRequest target: "main" };
-                    not { branch "main" };
-                    equals expected: "7", actual: env.BUILD_NUMBER
+//             when {
+// //                 allOf {
+// //                     not { changeRequest target: "main" };
+// //                     not { branch "main" };
+// //                     equals expected: "1", actual: env.BUILD_NUMBER
+// //                 }
+//             }
+            environment {
+                DATABASENAME="${GIT_BRANCH.split("-")[0].toLowerCase()}"
+            }
+
+            steps {
+                dir("examples/cloudbank/jenkins/backend-dev/scripts") {
+                    echo "Generating database for branch $GIT_BRANCH"
+                    sh "./generate-yaml-file.sh $DATABASENAME"
                 }
-
-            }
-               stages {
-                    stage("generate-yaml-file") {
-                        steps {
-                            echo "Generating YAML file to generate"
-                            dir("examples/cloudbank/jenkins/backend-dev/scripts") {
-                                sh "./generate-yaml-file.sh $DATABASENAME"
+                dir("$WORKSPACE/run") {
+                    withKubeCredentials(kubectlCredentials: [[
+                    caCertificate: '',
+                    clusterName: "cluster-cwz7kgdbhgq",
+                    contextName: '',
+                    credentialsId: "kubectl-token",
+                    namespace: "cloudbank",
+                    serverUrl: "https://132.226.124.76:6443"
+                    ]]) {
+                        script {
+                            echo "Creating Database $DATABASENAME."
+                            sh "kubectl apply -f sidb-create.yaml"
+                        }
+                        timeout(5) {
+                            waitUntil {
+                                is_database_ready()
                             }
+                        }
+                        script {
+                            sh "kubectl --type=merge -p '{\"spec\":{\"loadBalancer\": true}}' patch singleinstancedatabase $DATABASENAME"
 
-                            echo "DONE"
                         }
                     }
-                    stage("create-database") {
-                        steps {
-                            echo "Creating Single-Instance Database $DATABASENAME"
-                            create_database()
-                            echo "DONE"
-                        }
-                    }
-                    stage("setup-database") {
-                        steps {
-                            echo "Setting up SIDB $DATABASENAME"
-                            setup_database()
-                            echo "DONE"
-                        }
-               }
+
+                }
+                create_database()
             }
-
         }
         stage('push-to-branch') {
         // Only triggered on pushed commits (BUILD_NUMBER > 1)
             when {
                 not { changeRequest target: "main" };
-                not { branch "main" };
+                { branch "main" };
             }
             stages {
                 stage("build-backend") {
@@ -75,73 +63,16 @@ pipeline {
                 }
 
             }
-
-
-        }
-
-        stage("merge-to-main") {
-            when {
-                changeRequest target: "main"
-            }
-            steps {
-                echo "Pull Request $BRANCH_NAME"
-            }
         }
     }
 }
 
-def setup_database() {
-    timeout(5) {
-        waitUntil {
-            script {
-                withKubeCredentials(
-                    kubectlCredentials: [[
-                        caCertificate: '',
-                        clusterName: "cluster-cwz7kgdbhgq",
-                        contextName: '',
-                        credentialsId: 'kubectl-token',
-                        namespace: "cloudbank",
-                        serverUrl: "https://132.226.124.76:6443"
-                    ]]) {
-                    try {
-                        def r = sh script: "kubectl get singleinstancedatabase $DATABASENAME -o 'jsonpath={.status.status}'", returnStdout: true
-                        print r
-                        return (r == "Healthy")
-                    } catch (Exception e) {
-                        echo "$DATABASENAME is still being created..."
-                        return false
-                    }
-
-                }
-            }
-        }
-    }
-    echo "Database now exists and setup can begin."
-    withKubeCredentials(kubectlCredentials: [[
-        caCertificate: '',
-        clusterName: "cluster-cwz7kgdbhgq",
-        contextName: '',
-        credentialsId: "kubectl-token",
-        namespace: "cloudbank",
-        serverUrl: "https://132.226.124.76:6443"
-        ]]) {
-            echo "Configuring LoadBalancer..."
-            sh "kubectl --type=merge -p '{\"spec\":{\"loadBalancer\": true}}' patch singleinstancedatabase $DATABASENAME"
-            echo "DONE"
-        }
+def is_database_ready() {
+    try {
+        def r = sh script: "kubectl get singleinstancedatabase $DATABASENAME -o 'jsonpath={.status.status}'", returnStdout: true
+        return (r == "Healthy")
+    } catch (Exception e) {
+        echo "Database is still being provisioned. Retrying..."
+        return false
 }
 
-def create_database() {
-    dir("$WORKSPACE/run") {
-        withKubeCredentials(kubectlCredentials: [[
-        caCertificate: '',
-        clusterName: "cluster-cwz7kgdbhgq",
-        contextName: '',
-        credentialsId: "kubectl-token",
-        namespace: "cloudbank",
-        serverUrl: "https://132.226.124.76:6443"
-        ]]) {
-            sh "kubectl apply -f sidb-create.yaml"
-        }
-    }
-}
