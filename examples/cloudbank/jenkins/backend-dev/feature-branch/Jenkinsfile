@@ -2,7 +2,6 @@ pipeline {
     agent any
     environment {
         DATABASENAME="${GIT_BRANCH.split("-")[0].toLowerCase()}"
-
     }
     stages {
         stage("details") {
