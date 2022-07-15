@@ -73,5 +73,6 @@ def is_database_ready() {
     } catch (Exception e) {
         echo "Database is still being provisioned. Retrying..."
         return false
+    }
 }
 
