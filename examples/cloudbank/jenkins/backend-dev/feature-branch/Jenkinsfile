@@ -35,19 +35,22 @@ pipeline {
                     stage("generate-yaml-file") {
                         steps {
                             echo "Generating YAML file to generate"
-                            build_dev()
+                            sh "./generate-yaml-file.sh $DATABASENAME"
+                            echo "DONE"
                         }
                     }
                     stage("create-database") {
                         steps {
                             echo "Creating Single-Instance Database $DATABASENAME"
                             create_database()
+                            echo "DONE"
                         }
                     }
                     stage("setup-database") {
                         steps {
                             echo "Setting up SIDB $DATABASENAME"
                             setup_database()
+                            echo "DONE"
                         }
                }
             }
@@ -83,22 +86,6 @@ pipeline {
     }
 }
 
-def build_dev() {
-    dir("$WORKSPACE/examples/cloudbank/jenkins/backend-dev/scripts") {
-        withKubeCredentials(kubectlCredentials: [[
-        caCertificate: '',
-        clusterName: "cluster-cwz7kgdbhgq",
-        contextName: '',
-        credentialsId: "kubectl-token",
-        namespace: "kube-system",
-        serverUrl: "https://132.226.124.76:6443"
-        ]]) {
-            sh "./generate-yaml-file.sh $DATABASENAME"
-        }
-    }
-
-}
-
 def setup_database() {
     timeout(5) {
         waitUntil {
@@ -118,8 +105,7 @@ def setup_database() {
             }
         }
     }
-    echo "setup_database"
-
+    echo "Database now exists and setup can begin."
 }
 
 def create_database() {
