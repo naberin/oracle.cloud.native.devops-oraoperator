@@ -48,10 +48,9 @@ pipeline {
             }
         }
         stage('push-to-branch') {
-        // Only triggered on pushed commits (BUILD_NUMBER > 1)
             when {
                 not { changeRequest target: "main" };
-                { branch "main" };
+                branch "main";
             }
             stages {
                 stage("build-backend") {
