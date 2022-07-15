@@ -27,7 +27,7 @@ pipeline {
                 allOf {
                     not { changeRequest target: "main" };
                     not { branch "main" };
-                    equals expected: "3", actual: env.BUILD_NUMBER
+                    equals expected: "4", actual: env.BUILD_NUMBER
                 }
 
             }
@@ -136,7 +136,6 @@ def create_database() {
         serverUrl: "https://132.226.124.76:6443"
         ]]) {
             sh "kubectl apply -f sidb-create.yaml"
-            sh "kubectl --type=merge -p '{\"spec\":{\"loadBalancer\": true}}' patch singleinstancedatabase $DATABASENAME"
         }
     }
 }
