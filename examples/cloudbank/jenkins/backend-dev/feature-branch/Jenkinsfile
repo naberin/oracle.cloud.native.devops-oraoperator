@@ -27,7 +27,7 @@ pipeline {
                 allOf {
                     not { changeRequest target: "main" };
                     not { branch "main" };
-                    equals expected: "1", actual: env.BUILD_NUMBER
+                    equals expected: "3", actual: env.BUILD_NUMBER
                 }
 
             }
