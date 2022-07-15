@@ -1,3 +1,4 @@
+#!/bin/bash
 # This script is called by other scripts
 # and with parameters on how to change the template
 

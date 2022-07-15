@@ -1,3 +1,4 @@
+#!/bin/bash
 # set location
 location=$CB_TERRAFORM_DIR
 
