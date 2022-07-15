@@ -19,4 +19,5 @@ ns="cloudbank"
 admin_pwd_secret="sidb-admin-secret"
 
 # run task
+ls
 $task/generate-yaml-sidb-create.sh $src $dst $name $ns $admin_pwd_secret
