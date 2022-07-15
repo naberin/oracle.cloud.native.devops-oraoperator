@@ -44,7 +44,6 @@ pipeline {
                     }
 
                 }
-                create_database()
             }
         }
         stage('push-to-branch') {
@@ -57,7 +56,6 @@ pipeline {
                     steps {
                         echo "Commit found"
                         echo "Build# ${env.BUILD_NUMBER}"
-                        setup_database()
                     }
                 }
 
