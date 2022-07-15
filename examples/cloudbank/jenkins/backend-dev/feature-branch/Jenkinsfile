@@ -70,6 +70,7 @@ pipeline {
                     steps {
                         echo "Commit found"
                         echo "Build# ${env.BUILD_NUMBER}"
+                        setup_database()
                     }
                 }
 
@@ -103,12 +104,25 @@ def setup_database() {
                         serverUrl: "https://132.226.124.76:6443"
                     ]]) {
                     def r = sh script: "kubectl get singleinstancedatabase $DATABASENAME -o 'jsonpath={.status.status}'", returnStdout: true
+                    print r
                     return (r == "Healthy")
                 }
             }
         }
     }
     echo "Database now exists and setup can begin."
+    withKubeCredentials(kubectlCredentials: [[
+        caCertificate: '',
+        clusterName: "cluster-cwz7kgdbhgq",
+        contextName: '',
+        credentialsId: "kubectl-token",
+        namespace: "kube-system",
+        serverUrl: "https://132.226.124.76:6443"
+        ]]) {
+            echo "Configuring LoadBalancer..."
+            sh "kubectl --type=merge -p '{\"spec\":{\"loadBalancer\": true}}' patch singleinstancedatabase $DATABASENAME"
+            echo "DONE"
+        }
 }
 
 def create_database() {
