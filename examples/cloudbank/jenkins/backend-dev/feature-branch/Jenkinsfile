@@ -35,7 +35,10 @@ pipeline {
                     stage("generate-yaml-file") {
                         steps {
                             echo "Generating YAML file to generate"
-                            sh "./generate-yaml-file.sh $DATABASENAME"
+                            dir("examples/cloudbank/jenkins/backend-dev/scripts") {
+                                sh "./generate-yaml-file.sh $DATABASENAME"
+                            }
+
                             echo "DONE"
                         }
                     }
