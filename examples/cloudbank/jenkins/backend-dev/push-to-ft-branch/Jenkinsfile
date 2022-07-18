@@ -4,11 +4,13 @@ pipeline {
         maven "m3"
     }
   triggers {
+    withCredentials([string(credentialsId: 'secret-token', variable: 'secretToken')]) {
     GenericTrigger(
      genericVariables: [
       [key: 'ref', value: '$.ref']
      ],
-   )
+     secretToken: secretToken
+   )}
   }
     stages {
         stage("values") {
