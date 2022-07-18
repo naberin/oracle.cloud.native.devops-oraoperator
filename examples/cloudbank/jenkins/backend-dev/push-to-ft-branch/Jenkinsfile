@@ -3,11 +3,65 @@ pipeline {
     tools {
         maven "m3"
     }
+    properties([
+      pipelineTriggers([
+       [$class: 'GenericTrigger',
+        genericVariables: [
+             [key: 'created', value: '$.created', expressionType: 'JSONPath'],
+             [key: 'deleted', value: '$.deleted', expressionType: 'JSONPath']
+        ]
+       ]
+      ])
+    ])
     stages {
         stage("build-backend") {
+            when {
+                not { branch "main"}
+                not { changeRequest() }
+            }
+
             steps {
                 dir("examples/cloudbank/backend-springboot") {
                     sh "mvn clean package"
+                }
+            }
+        }
+
+        stage('create-feature-branch') {
+            when {
+                expression { return params.created == true }
+            }
+            environment {
+                DATABASENAME="${GIT_BRANCH.split("-")[0].toLowerCase()}"
+            }
+            steps {
+                dir("examples/cloudbank/jenkins/backend-dev/scripts") {
+                    echo "Generating database for branch $GIT_BRANCH"
+                    sh "./generate-yaml-file.sh $DATABASENAME"
+                }
+                dir("$WORKSPACE/run") {
+                    withKubeCredentials(kubectlCredentials: [[
+                    caCertificate: '',
+                    clusterName: "cluster-cwz7kgdbhgq",
+                    contextName: '',
+                    credentialsId: "kubectl-token",
+                    namespace: "cloudbank",
+                    serverUrl: "https://132.226.124.76:6443"
+                    ]]) {
+                        script {
+                            echo "Creating Database $DATABASENAME."
+                            sh "kubectl apply -f sidb-create.yaml"
+                        }
+                        timeout(5) {
+                            waitUntil {
+                                is_database_ready()
+                            }
+                        }
+                        script {
+                            sh "kubectl --type=merge -p '{\"spec\":{\"loadBalancer\": true}}' patch singleinstancedatabase $DATABASENAME"
+                        }
+                    }
+
                 }
             }
         }
