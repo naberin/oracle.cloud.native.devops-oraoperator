@@ -8,9 +8,14 @@ pipeline {
      genericVariables: [
       [key: 'ref', value: '$.ref']
      ],
-   }
+   )
   }
     stages {
+        stage("values") {
+            steps {
+                echo params.ref
+            }
+        }
         stage("build-backend") {
             when {
                 not { branch "main"}
