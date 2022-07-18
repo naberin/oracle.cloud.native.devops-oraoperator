@@ -1,0 +1,15 @@
+pipeline {
+    agent any
+    tools {
+        maven "m3"
+    }
+    stages {
+        stage("build-backend") {
+            steps {
+                dir("examples/cloudbank/backend-springboot") {
+                    sh "mvn clean package"
+                }
+            }
+        }
+    }`
+}

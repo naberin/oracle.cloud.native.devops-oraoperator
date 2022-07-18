@@ -1,19 +1,16 @@
 pipeline {
     agent any
-
+    parameters {
+        booleanParam(name: 'created', defaultValue: false, description: 'is a branch created?')
+    }
     stages {
         stage('create-feature-branch') {
-//             when {
-// //                 allOf {
-// //                     not { changeRequest target: "main" };
-// //                     not { branch "main" };
-// //                     equals expected: "1", actual: env.BUILD_NUMBER
-// //                 }
-//             }
+            when {
+                expression { return params.created == true }
+            }
             environment {
                 DATABASENAME="${GIT_BRANCH.split("-")[0].toLowerCase()}"
             }
-
             steps {
                 dir("examples/cloudbank/jenkins/backend-dev/scripts") {
                     echo "Generating database for branch $GIT_BRANCH"
@@ -39,38 +36,12 @@ pipeline {
                         }
                         script {
                             sh "kubectl --type=merge -p '{\"spec\":{\"loadBalancer\": true}}' patch singleinstancedatabase $DATABASENAME"
-
                         }
                     }
 
                 }
             }
         }
-        stage('push-to-branch') {
-            when {
-                not { changeRequest target: "main" };
-                branch "main";
-            }
-            stages {
-                stage("build-backend") {
-                    steps {
-                        echo "Commit found"
-                        echo "Build# ${env.BUILD_NUMBER}"
-                    }
-                }
 
-            }
-        }
     }
 }
-
-def is_database_ready() {
-    try {
-        def r = sh script: "kubectl get singleinstancedatabase $DATABASENAME -o 'jsonpath={.status.status}'", returnStdout: true
-        return (r == "Healthy")
-    } catch (Exception e) {
-        echo "Database is still being provisioned. Retrying..."
-        return false
-    }
-}
-
