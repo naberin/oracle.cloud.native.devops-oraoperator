@@ -3,16 +3,13 @@ pipeline {
     tools {
         maven "m3"
     }
-    properties([
-      pipelineTriggers([
-       [$class: 'GenericTrigger',
-        genericVariables: [
-             [key: 'created', value: '$.created', expressionType: 'JSONPath'],
-             [key: 'deleted', value: '$.deleted', expressionType: 'JSONPath']
-        ]
-       ]
-      ])
-    ])
+  triggers {
+    GenericTrigger(
+     genericVariables: [
+      [key: 'ref', value: '$.ref']
+     ],
+   }
+  }
     stages {
         stage("build-backend") {
             when {
