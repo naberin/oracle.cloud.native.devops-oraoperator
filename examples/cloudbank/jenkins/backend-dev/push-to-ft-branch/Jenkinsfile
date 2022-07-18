@@ -14,7 +14,7 @@ pipeline {
         stage("values") {
             steps {
                 echo params.ref
-                echo "Canary Test"
+                echo "Canary Tests"
             }
         }
         stage("build-backend") {
