@@ -17,9 +17,7 @@ location="$CB_STATE_DIR/generated/wallet.zip"
 CONNSERVICE=cloudbankdb_tp
 $CB_STATE_DIR/download-adb-wallet.sh
 elif [[ $DBKIND == SIDB ]]; then
-
 CONNSERVICE=XEPDB1
-
 fi
 
 # For ADB
@@ -53,17 +51,7 @@ if [[ $DBKIND == ADB ]]; then
 } | sql /nolog > $CB_STATE_DIR/logs/$CURRENT_TIME-sql-setup.log
 
 elif [[ $DBKIND == SIDB ]]; then
-{
-  echo "alter session set container=XEPDB1;"
-  echo "connect sys/$password@$CONNSERVICE as sysdba"
-  cat AdminCreateUsers-SIDBXE.sql
-  echo "conn aquser/$password@$CONNSERVICE"
-  cat AQUserCreateQueues.sql
-  echo "conn bankauser/$password@$CONNSERVICE"
-  cat BankAUser.sql
-  echo "conn bankbuser/$password@$CONNSERVICE"
-  cat BankBUser.sql
-} | kubectl exec -i $(kubectl get pods | grep 'cloudbankdb') -- sqlplus / as sysdba > $CB_STATE_DIR/logs/$CURRENT_TIME-sql-setup.log
+./tasks/configure-sidb "cloudbankdb"
 
 fi
 

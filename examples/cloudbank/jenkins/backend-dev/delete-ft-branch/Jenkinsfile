@@ -1,0 +1,32 @@
+pipeline {
+    agent any
+    parameters {
+        booleanParam(name: 'deleted', defaultValue: false, description: 'is a branch deleted?')
+    }
+    stages {
+        stage('delete-dev-environment') {
+            when {
+                expression { return params.deleted == true }
+            }
+            environment {
+                DATABASENAME="${GIT_BRANCH.split("-")[0].toLowerCase()}"
+            }
+            steps {
+                withKubeCredentials(kubectlCredentials: [[
+                    caCertificate: '',
+                    clusterName: "cluster-cwz7kgdbhgq",
+                    contextName: '',
+                    credentialsId: "kubectl-token",
+                    namespace: "cloudbank",
+                    serverUrl: "https://132.226.124.76:6443"
+                    ]]) {
+
+                    script {
+                        echo "Delete Database $DATABASENAME."
+                        sh "kubectl delete singleinstancedatabase $DATABASENAME"
+                    }
+                }
+            }
+        }
+    }
+}
