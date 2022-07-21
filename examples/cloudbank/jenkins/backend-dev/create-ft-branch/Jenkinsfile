@@ -31,7 +31,7 @@ pipeline {
                         }
                         timeout(5) {
                             waitUntil {
-                                is_database_ready()
+                                is_database_ready($DATABASENAME)
                             }
                         }
                         script {
@@ -45,3 +45,4 @@ pipeline {
 
     }
 }
+
