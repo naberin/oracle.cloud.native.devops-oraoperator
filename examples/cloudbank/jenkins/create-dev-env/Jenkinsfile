@@ -1,10 +1,11 @@
 pipeline {
     agent any
     environment {
-        CLUSTERNAME="cluster-cwz7kgdbhgq"
-        CLUSTERNAMESPACE="cloudbank"
-        CLUSTERCLUSTERSERVERURL="https://132.226.124.76:6443"
-        CLUSTERCREDENTIALSID=""
+        CLUSTER_NAME="cluster-cwz7kgdbhgq"
+        CLUSTER_NAMESPACE="cloudbank"
+        CLUSTER_SERVER_URL="https://132.226.124.76:6443"
+        CLUSTER_CREDENTIALS_ID="cbworkshop-kubectl-token"
+        WEBHOOK_TOKEN_CREDENTIALS_ID='cbworkshop-create-branch-token'
     }
     parameters {
         string(name: 'ref_value', defaultValue: '', description: 'Payload ref')
@@ -23,13 +24,13 @@ pipeline {
             ],
             causeString: 'Triggered by feature branch creation',
             token: '',
-            tokenCredentialId: 'create-trigger-secret',
+            tokenCredentialId: env.WEBHOOK_TOKEN_CREDENTIALS_ID,
 
             printContributedVariables: false,
             printPostContent: false,
             silentResponse: false,
             regexpFilterText: '$ref_value',
-            regexpFilterExpression: '^dev/'
+            regexpFilterExpression: '^dev/\d+[a-Z0-9]*'
         )
     }
     stages {
@@ -52,11 +53,11 @@ pipeline {
                 dir("$WORKSPACE/run") {
                     withKubeCredentials(kubectlCredentials: [[
                     caCertificate: '',
-                    clusterName: env.CLUSTERNAME,
+                    clusterName: env.CLUSTER_NAME,
                     contextName: '',
-                    credentialsId: "kubectl-token",
-                    namespace: env.CLUSTERNAMESPACE,
-                    serverUrl: env.CLUSTERSERVERURL
+                    credentialsId: env.CLUSTER_CREDENTIALS_ID,
+                    namespace: env.CLUSTER_NAMESPACE,
+                    serverUrl: env.CLUSTER_SERVER_URL
                     ]]) {
                         script {
                             echo "Creating Database $DATABASENAME."
@@ -75,7 +76,6 @@ pipeline {
                 }
             }
         }
-
     }
 }
 def is_database_ready(database) {

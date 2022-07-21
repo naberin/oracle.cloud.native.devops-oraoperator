@@ -10,6 +10,7 @@
 # - Fingerprint
 # - OCI Registry
 # - Jenkins Password
+# todo: generate tokens for cicd webhooks
 STATE_LOCATION=$CB_STATE_DIR/state.json
 
 
