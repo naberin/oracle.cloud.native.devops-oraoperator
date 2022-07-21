@@ -63,7 +63,7 @@ pipeline {
                         }
                         timeout(5) {
                             waitUntil {
-                                is_database_ready($DATABASENAME)
+                                is_database_ready("$DATABASENAME")
                             }
                         }
                         script {
