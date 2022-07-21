@@ -4,7 +4,6 @@ pipeline {
         CLUSTER_NAME="cluster-cwz7kgdbhgq"
         CLUSTER_NAMESPACE="cloudbank"
         CLUSTER_SERVER_URL="https://132.226.124.76:6443"
-        CLUSTER_CREDENTIALS_ID="cbworkshop-kubectl-token"
     }
     parameters {
         string(name: 'ref_value', defaultValue: '', description: 'Payload ref')
@@ -54,7 +53,7 @@ pipeline {
                     caCertificate: '',
                     clusterName: env.CLUSTER_NAME,
                     contextName: '',
-                    credentialsId: env.CLUSTER_CREDENTIALS_ID,
+                    credentialsId: "cbworkshop-kubectl-token",
                     namespace: env.CLUSTER_NAMESPACE,
                     serverUrl: env.CLUSTER_SERVER_URL
                     ]]) {
@@ -69,6 +68,11 @@ pipeline {
                         }
                         script {
                             sh "kubectl --type=merge -p '{\"spec\":{\"loadBalancer\": true}}' patch singleinstancedatabase $DATABASENAME"
+                        }
+                        withCredentials([string(credentialsId: 'cbworkshop-default-db-password', variable: 'PASSWORD')]) {
+                            dir("$WORKSPACE/examples/cloudbank/sql") {
+                                sh "configure-sidb.sh $DATABASENAME $PASSWORD"
+                            }
                         }
                     }
 

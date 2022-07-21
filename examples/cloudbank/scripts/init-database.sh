@@ -37,22 +37,10 @@ cd $CB_ROOT_DIR/sql
 # For ADB
 # Without TLS enabled and with wallet
 if [[ $DBKIND == ADB ]]; then
-
-{
-  echo "set cloudconfig $location"
-  echo "conn admin/$password@$CONNSERVICE"
-  echo "@AdminCreateUsers.sql"
-  echo "conn aquser/$password@$CONNSERVICE"
-  echo "@AQUserCreateQueues.sql"
-  echo "conn bankauser/$password@$CONNSERVICE"
-  echo "@BankAUser.sql"
-  echo "conn bankbuser/$password@$CONNSERVICE"
-  echo "@BankBUser.sql"
-} | sql /nolog > $CB_STATE_DIR/logs/$CURRENT_TIME-sql-setup.log
+configure-adb.sh $location $password $CONNSERVICE > $CB_STATE_DIR/logs/$CURRENT_TIME-sql-setup.log
 
 elif [[ $DBKIND == SIDB ]]; then
-./tasks/configure-sidb "cloudbankdb"
-
+configure-sidb.sh "cloudbankdb" $password $CONNSERVICE > $CB_STATE_DIR/logs/$CURRENT_TIME-sql-setup.log
 fi
 
 # completed
