@@ -72,7 +72,7 @@ pipeline {
                         withCredentials([string(credentialsId: 'cbworkshop-default-db-password', variable: 'PASSWORD')]) {
                             dir("$WORKSPACE/examples/cloudbank/sql") {
                                 sh "ls"
-                                sh('./configure-sidb.sh $DATABASENAME $PASSWORD')
+                                sh("./configure-sidb.sh $DATABASENAME '$PASSWORD'")
                             }
                         }
                     }
