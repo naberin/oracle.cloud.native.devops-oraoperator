@@ -5,7 +5,6 @@ pipeline {
         CLUSTER_NAMESPACE="cloudbank"
         CLUSTER_SERVER_URL="https://132.226.124.76:6443"
         CLUSTER_CREDENTIALS_ID="cbworkshop-kubectl-token"
-        WEBHOOK_TOKEN_CREDENTIALS_ID='cbworkshop-create-branch-token'
     }
     parameters {
         string(name: 'ref_value', defaultValue: '', description: 'Payload ref')
@@ -24,7 +23,7 @@ pipeline {
             ],
             causeString: 'Triggered by feature branch creation',
             token: '',
-            tokenCredentialId: env.WEBHOOK_TOKEN_CREDENTIALS_ID,
+            tokenCredentialId: 'cbworkshop-create-branch-token',
 
             printContributedVariables: false,
             printPostContent: false,
