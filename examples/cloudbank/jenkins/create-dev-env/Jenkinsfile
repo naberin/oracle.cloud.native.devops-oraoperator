@@ -61,7 +61,7 @@ pipeline {
                             echo "Creating Database $DATABASENAME."
                             sh "kubectl apply -f sidb-create.yaml"
                         }
-                        timeout(5) {
+                        timeout(15) {
                             waitUntil {
                                 is_database_ready("$DATABASENAME")
                             }
@@ -71,7 +71,7 @@ pipeline {
                         }
                         withCredentials([string(credentialsId: 'cbworkshop-default-db-password', variable: 'PASSWORD')]) {
                             dir("$WORKSPACE/examples/cloudbank/sql") {
-                                sh "configure-sidb.sh $DATABASENAME $PASSWORD"
+                                sh('configure-sidb.sh $DATABASENAME $PASSWORD')
                             }
                         }
                     }
