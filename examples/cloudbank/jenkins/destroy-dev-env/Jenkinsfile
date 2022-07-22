@@ -34,7 +34,7 @@ pipeline {
     stages {
         stage('create-feature-branch') {
             when {
-                expression { return params.ref_type == "branch" && params.x_github_event == "create" }
+                expression { return params.ref_type == "branch" && params.x_github_event == "delete" }
                 not {equals expected: 1, actual: params.ref_value.split('/').length}
             }
             environment {
