@@ -6,5 +6,7 @@ create table bankauser.accounts (
   accountvalue integer CONSTRAINT positive_inventory CHECK (accountvalue >= 0) );
 
 insert into bankauser.accounts values (100, 100);
+
 insert into bankauser.accounts values (200, 200);
+
 insert into bankauser.accounts values (300, 300);
