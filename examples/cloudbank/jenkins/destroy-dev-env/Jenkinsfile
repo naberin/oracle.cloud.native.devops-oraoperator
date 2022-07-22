@@ -20,9 +20,9 @@ pipeline {
                 [key: 'X-Github-Event', regexpFilter: '']
 
             ],
-            causeString: 'Triggered by feature branch creation',
+            causeString: 'Triggered by feature branch deletion',
             token: '',
-            tokenCredentialId: 'cbworkshop-create-branch-token',
+            tokenCredentialId: 'cbworkshop-delete-branch-token',
 
             printContributedVariables: false,
             printPostContent: false,
@@ -41,10 +41,6 @@ pipeline {
                 DATABASENAME="${params.ref_value.split("/")[1].toLowerCase()}"
             }
             steps {
-                dir("examples/cloudbank/jenkins/backend-dev/scripts") {
-                    echo "Generating database for branch $GIT_BRANCH"
-                    sh './generate-yaml-file.sh $DATABASENAME'
-                }
                 dir("$WORKSPACE/run") {
                     withKubeCredentials(kubectlCredentials: [[
                     caCertificate: '',
@@ -55,35 +51,12 @@ pipeline {
                     serverUrl: env.CLUSTER_SERVER_URL
                     ]]) {
                         script {
-                            echo 'Creating Database $DATABASENAME.'
-                            sh 'kubectl apply -f sidb-create.yaml'
-                        }
-                        timeout(15) {
-                            waitUntil {
-                                is_database_ready("$DATABASENAME")
-                            }
-                        }
-                        script {
-                            sh 'kubectl --type=merge -p \'{\"spec\":{\"loadBalancer\": true}}\' patch singleinstancedatabase $DATABASENAME'
-                        }
-                        withCredentials([string(credentialsId: 'cbworkshop-default-db-password', variable: 'PASSWORD')]) {
-                            dir("$WORKSPACE/examples/cloudbank/sql") {
-                                sh('./configure-sidb.sh $DATABASENAME $PASSWORD')
-                            }
+                            echo "Destroying Database $DATABASENAME."
+                            sh 'kubectl delete singleinstancedatabase $DATABASENAME'
                         }
                     }
                 }
             }
         }
-    }
-}
-
-def is_database_ready(database) {
-    try {
-        def r = sh script: "kubectl get singleinstancedatabase $database -o 'jsonpath={.status.status}'", returnStdout: true
-        return (r == "Healthy")
-    } catch (Exception e) {
-        echo "Database is still being provisioned. Retrying..."
-        return false
     }
 }
