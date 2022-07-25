@@ -3,10 +3,12 @@
 
 create table bankauser.accounts (
   accountid integer PRIMARY KEY NOT NULL,
-  accountvalue integer CONSTRAINT positive_inventory CHECK (accountvalue >= 0) );
+  accountvalue integer CONSTRAINT positive_inventory CHECK (accountvalue >= 0),
+  transaction_date date default sysdate NOT NULL
+);
 
-insert into bankauser.accounts values (100, 100);
+insert into bankauser.accounts(ACCOUNTID, ACCOUNTVALUE) values (100, 100);
 
-insert into bankauser.accounts values (200, 200);
+insert into bankauser.accounts(ACCOUNTID, ACCOUNTVALUE) values (200, 200);
 
-insert into bankauser.accounts values (300, 300);
+insert into bankauser.accounts(ACCOUNTID, ACCOUNTVALUE) values (300, 300);
