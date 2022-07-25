@@ -57,6 +57,12 @@ echo 'To continue, the lab requires more information...'
 $CB_STATE_DIR/init-state.sh
 
 
+# Set (3) Tokens for Jenkins
+echo -n 'Generate tokens...'
+$CB_STATE_DIR/task/generate-tokens.sh
+echo 'DONE'
+echo ''
+
 # Run terraform
 echo 'The lab requires more information...'
 $CB_STATE_DIR/init-infrastructure.sh
