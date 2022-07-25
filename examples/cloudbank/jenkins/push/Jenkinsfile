@@ -1,0 +1,67 @@
+pipeline {
+    agent any
+    environment {
+        CLUSTER_NAME="cluster-cwz7kgdbhgq"
+        CLUSTER_NAMESPACE="cloudbank"
+        CLUSTER_SERVER_URL="https://132.226.124.76:6443"
+    }
+    parameters {
+        string(name: 'ref_value', defaultValue: '', description: 'Payload ref')
+        string(name: 'x_github_event', defaultValue: '', description: 'Header X-Github-Event')
+        string(name:  'ref_type', defaultValue: '', description: 'Payload ref_type')
+    }
+    triggers {
+        GenericTrigger(
+            genericVariables: [
+                [key: 'ref_value', value: '$.ref'],
+                [key: 'ref_type', value: '$.ref_type'],
+            ],
+            genericHeaderVariables: [
+                [key: 'X-Github-Event', regexpFilter: '']
+
+            ],
+            causeString: 'Triggered by feature branch creation',
+            token: '',
+            tokenCredentialId: 'cbworkshop-create-branch-token',
+
+            printContributedVariables: false,
+            printPostContent: false,
+            silentResponse: false,
+            regexpFilterText: '$ref_value',
+            regexpFilterExpression: '^dev/\\w+[a-z0-9]*'
+        )
+    }
+    stages {
+        stage('create-feature-branch') {
+            when {
+                expression { return params.ref_type == "branch" && params.x_github_event == "create" }
+                not {equals expected: 1, actual: params.ref_value.split('/').length}
+            }
+            environment {
+                DATABASENAME="${params.ref_value.split("/")[1].toLowerCase()}"
+            }
+            steps {
+                dir("examples/cloudbank/jenkins/backend-dev/scripts") {
+                    echo "Generating database for branch $GIT_BRANCH"
+                    sh './generate-yaml-file.sh $DATABASENAME'
+                }
+                dir("$WORKSPACE/run") {
+                    withKubeCredentials(kubectlCredentials: [[
+                    caCertificate: '',
+                    clusterName: env.CLUSTER_NAME,
+                    contextName: '',
+                    credentialsId: "cbworkshop-kubectl-token",
+                    namespace: env.CLUSTER_NAMESPACE,
+                    serverUrl: env.CLUSTER_SERVER_URL
+                    ]]) {
+                        script {
+                            echo 'Creating Database $DATABASENAME.'
+                            sh 'kubectl apply -f sidb-create.yaml'
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
