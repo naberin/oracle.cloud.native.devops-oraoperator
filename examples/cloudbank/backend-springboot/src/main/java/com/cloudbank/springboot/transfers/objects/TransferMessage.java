@@ -1,4 +1,4 @@
-package com.cloudbank.springboot.transfers;
+package com.cloudbank.springboot.transfers.objects;
 
 /**
  * Transfer message sent between banks (as opposed to TransferInformation which is the rest request and bank representation of transfer)

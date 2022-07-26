@@ -1,4 +1,4 @@
-package com.cloudbank.springboot.transfers;
+package com.cloudbank.springboot.transfers.objects;
 
 /**
  * Rest response representation of transfer status/outcome

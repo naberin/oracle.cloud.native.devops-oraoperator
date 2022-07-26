@@ -1,5 +1,9 @@
 package com.cloudbank.springboot.transfers;
 
+import com.cloudbank.springboot.transfers.objects.TransferInformation;
+import com.cloudbank.springboot.transfers.objects.TransferMessage;
+import com.cloudbank.springboot.transfers.objects.TransferOutcome;
+import com.cloudbank.springboot.transfers.utils.JsonUtils;
 import oracle.jdbc.OraclePreparedStatement;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -12,7 +16,6 @@ import oracle.ucp.jdbc.PoolDataSource;
 import oracle.ucp.jdbc.PoolDataSourceFactory;
 
 import java.sql.Connection;
-import org.json.JSONObject;
 import java.sql.ResultSet;
 import java.sql.Types;
 import java.util.HashMap;
@@ -34,7 +37,6 @@ public class TransferController {
     final String banksubscribername =  System.getenv("banksubscribername");
     final String bankdbuser =   System.getenv("bankdbuser");
     final String bankdbpw =  System.getenv("bankdbpw");
-
     final String bankdburl =   System.getenv("bankdburl");
     //transfer id is currently just the currentTimeMillis and not persisted
     private Map<String, TransferInformation> transferLedger = new HashMap<>();
@@ -42,7 +44,7 @@ public class TransferController {
     static {
         System.setProperty("oracle.jdbc.fanEnabled", "false");
     }
-//   curl -X POST -H "Content-type: application/json" -d  "{\"frombank\" : \"banka\" , \"fromaccount\" : \"123\", \"tobank\" : \"bankb\", \"toaccount\" : \"456\",  \"amount\" : \"100\"}"  "http://banka.msdataworkshop:8080/transferfunds"
+//   curl -X POST -H "Content-type: application/json" -d  "{\"fromBank\" : \"banka\" , \"fromAccount\" : \"100\", \"toBank\" : \"bankb\", \"toAccount\" : \"200\",  \"amount\" : \"1\"}"  "http://localhost:8080/transferfunds"
     @PostMapping(value ="/transferfunds",
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
@@ -175,19 +177,6 @@ public class TransferController {
                 ", bankdburl='" + bankdburl + '\'' +
                 '}';
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     //here to end is for basic enq/deq test
     public void enqueue() throws Exception {
