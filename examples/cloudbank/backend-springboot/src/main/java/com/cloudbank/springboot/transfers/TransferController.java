@@ -4,7 +4,8 @@ import com.cloudbank.springboot.transfers.objects.TransferInformation;
 import com.cloudbank.springboot.transfers.objects.TransferMessage;
 import com.cloudbank.springboot.transfers.objects.TransferOutcome;
 import com.cloudbank.springboot.transfers.utils.JsonUtils;
-import oracle.jdbc.OraclePreparedStatement;
+import oracle.jdbc.OracleCallableStatement;
+import oracle.jdbc.OracleTypes;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.http.MediaType;
@@ -16,8 +17,7 @@ import oracle.ucp.jdbc.PoolDataSource;
 import oracle.ucp.jdbc.PoolDataSourceFactory;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Types;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,12 +38,15 @@ public class TransferController {
     final String bankdbuser =   System.getenv("bankdbuser");
     final String bankdbpw =  System.getenv("bankdbpw");
     final String bankdburl =   System.getenv("bankdburl");
+    // bankdburl example: "jdbc:oracle:thin:@//<ip_address>:1521/XEPDB1";
+
     //transfer id is currently just the currentTimeMillis and not persisted
     private Map<String, TransferInformation> transferLedger = new HashMap<>();
 
     static {
         System.setProperty("oracle.jdbc.fanEnabled", "false");
     }
+
 //   curl -X POST -H "Content-type: application/json" -d  "{\"fromBank\" : \"banka\" , \"fromAccount\" : \"100\", \"toBank\" : \"bankb\", \"toAccount\" : \"200\",  \"amount\" : \"1\"}"  "http://localhost:8080/transferfunds"
     @PostMapping(value ="/transferfunds",
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
@@ -52,8 +55,23 @@ public class TransferController {
         String transferId = "" +  System.currentTimeMillis();
         System.out.println("TransferController.enqueue transferInformation:" + transferInformation + " transferId:" + transferId);
         transferLedger.put(transferId, transferInformation);
-        adjustBalanceAndEnqueueTransfer(transferId, transferInformation);
+        Date updated = adjustBalanceAndEnqueueTransfer(transferId, transferInformation);
         return new TransferOutcome("success");
+    }
+
+    private Date adjustBalance(int amount, int account, AQjmsSession tsess) throws Exception {
+        final String UPDATE_BALANCE =
+                "begin update accounts set accountvalue = accountvalue + ?, last_updated_date=sysdate where accountid = ? and accountvalue > 0 returning last_updated_date into ?; end;";
+        try (OracleCallableStatement st =  (OracleCallableStatement) tsess.getDBConnection().prepareCall(UPDATE_BALANCE)) {
+            st.setInt(1, -amount);
+            st.setInt(2, account);
+            st.registerOutParameter(3, OracleTypes.DATE);
+            st.executeUpdate();
+            System.out.println("adjustBalance complete amount = " + amount + ", account = " + account);
+            Date updated_date = st.getDate(3);
+            System.out.println("balance adjusted on " + updated_date);
+            return updated_date;
+        }
     }
 
     /**
@@ -116,13 +134,13 @@ public class TransferController {
      * @param transferInformation
      * @throws Exception
      */
-    public void adjustBalanceAndEnqueueTransfer(String transferId, TransferInformation transferInformation) throws Exception {
+    public Date adjustBalanceAndEnqueueTransfer(String transferId, TransferInformation transferInformation) throws Exception {
         PoolDataSource atpBankPDB = getPoolDataSource();
         TopicConnectionFactory t_cf = AQjmsFactory.getTopicConnectionFactory(atpBankPDB);
         TopicConnection tconn = t_cf.createTopicConnection(bankdbuser, bankdbpw);
         TopicSession tsess = tconn.createTopicSession(true, Session.CLIENT_ACKNOWLEDGE);
         tconn.start();
-        adjustBalance(transferInformation.getAmount(), transferInformation.getFromAccount(), (AQjmsSession) tsess);
+        Date updated = adjustBalance(transferInformation.getAmount(), transferInformation.getFromAccount(), (AQjmsSession) tsess);
         Topic bankEvents = ((AQjmsSession) tsess).getTopic(localbankqueueschema, localbankqueuename);
         TopicPublisher publisher = tsess.createPublisher(bankEvents);
         TextMessage transferMessage = tsess.createTextMessage();
@@ -131,26 +149,7 @@ public class TransferController {
         publisher.send(bankEvents, transferMessage, DeliveryMode.PERSISTENT, 2, AQjmsConstants.EXPIRATION_NEVER);
         tsess.commit(); //todo handle rollback
         System.out.println("________________________________enqueue of transfer request complete:" + jsonString + " this:" + this);
-    }
-
-    private void adjustBalance(int amount, int account, AQjmsSession tsess) throws Exception {
-        final String UPDATE_BALANCE =
-                "update accounts set accountvalue = accountvalue + ? where accountid = ? and accountvalue > 0 returning accountvalue into ?";
-        try (OraclePreparedStatement st =  (OraclePreparedStatement) tsess.getDBConnection().prepareStatement(UPDATE_BALANCE)) {
-            st.setInt(1, -amount);
-            st.setInt(2, account);
-            st.registerReturnParameter(3, Types.INTEGER);
-            int i = st.executeUpdate();
-            System.out.println("adjustBalance complete amount = " + amount + ", account = " + account);
-            //todo something wrong where I'm not getting account value return....
-            ResultSet res = st.getReturnResultSet();
-            if (res.next()) {
-//                int accountBalance = res.getInt(3);
-//                System.out.println("Account balance is:" + accountBalance + "for account:" + account);
-            } else {
-//                System.out.println("No account (balance) found for account:" + account + " i:" + i);
-            }
-        }
+        return updated;
     }
 
     private PoolDataSource getPoolDataSource()  throws Exception {
