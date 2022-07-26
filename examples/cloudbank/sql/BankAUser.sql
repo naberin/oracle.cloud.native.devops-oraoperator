@@ -4,7 +4,7 @@
 create table bankauser.accounts (
   accountid integer PRIMARY KEY NOT NULL,
   accountvalue integer CONSTRAINT positive_inventory CHECK (accountvalue >= 0),
-  transaction_date date default sysdate NOT NULL
+  last_updated_date date
 );
 
 insert into bankauser.accounts(ACCOUNTID, ACCOUNTVALUE) values (100, 100);
