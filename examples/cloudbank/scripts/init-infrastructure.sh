@@ -2,7 +2,10 @@
 CURRENT_TIME=$( date '+%F_%H:%M:%S' )
 
 # Generate Terraform Vars file
-$CB_STATE_DIR/tasks/terraform-env.sh
+echo -n 'Preparing terraform...'
+envfile=$CB_TERRAFORM_DIR/terraform.env
+. $envfile
+echo 'DONE'
 
 # Run terraform
 $CB_STATE_DIR/tasks/terraform-create.sh &

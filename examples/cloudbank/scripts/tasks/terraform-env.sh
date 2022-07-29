@@ -2,5 +2,5 @@
 envfile=$CB_TERRAFORM_DIR/terraform.env
 
 echo -n 'Preparing terraform...'
-source $envfile
+. $envfile
 echo 'DONE'

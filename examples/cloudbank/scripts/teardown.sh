@@ -30,10 +30,13 @@ fi
 
 
 # Generate Terraform Vars file
-./tasks/terraform-env.sh
+echo -n 'Preparing terraform...'
+envfile=$CB_TERRAFORM_DIR/terraform.env
+. $envfile
+echo 'DONE'
 
 # Run terraform
-./tasks/terraform-create.sh
+$CB_STATE_DIR/tasks/terraform-destroy.sh &
 
 
 # return

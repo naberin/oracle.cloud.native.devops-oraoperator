@@ -31,7 +31,7 @@ state_set '.lab.region.identifier |= $VAL' $INP
 
 # requires Reqion Key
 read -p "Enter the region-key to use (e.g. us-phoenix-1): " RKEY
-state_set '.lab.region.key |= $VAL' RKEY
+state_set '.lab.region.key |= $VAL' $RKEY
 
 # requires OCIR registry
 namespace=$(oci os ns get | jq -r .data)
